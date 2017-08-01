@@ -1,0 +1,43 @@
+{
+    "name": "fivelab/resource",
+    "description": "Simple resource and serialization system for application",
+    "keywords": [ "resource", "rest", "api", "serializer", "web api", "hateoas" ],
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Vitaliy Zhuk",
+            "email": "v.zhuk@fivelab.org"
+        },
+
+        {
+            "name": "FiveLab Team",
+            "email": "dev@fivelab.org",
+            "homepage": "http://fivelab.org"
+        }
+    ],
+
+    "require": {
+        "php": ">=7.1",
+        "symfony/serializer": "~3.0",
+        "symfony/event-dispatcher": "~3.0",
+        "symfony/property-access": "~3.0"
+    },
+
+    "require-dev": {
+        "phpunit/phpunit": "^6.2",
+        "phpmetrics/phpmetrics": "^2.0"
+    },
+
+    "autoload": {
+        "psr-4": { "FiveLab\\Component\\Resource\\": "src/" }
+    },
+
+    "autoload-dev": {
+        "psr-4": { "FiveLab\\Component\\Resource\\Tests\\": "tests/" }
+    },
+
+    "config": {
+        "bin-dir": "./bin/"
+    }
+}
