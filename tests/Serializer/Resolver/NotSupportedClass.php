@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 /*
  * This file is part of the FiveLab Resource package
  *
@@ -11,13 +9,13 @@ declare(strict_types=1);
  * file that was distributed with this source code
  */
 
-namespace FiveLab\Component\Resource\Serializer\Resolver;
+namespace FiveLab\Component\Resource\Tests\Serializer\Resolver;
+
+use FiveLab\Component\Resource\Resource\ResourceInterface;
 
 /**
- * Throw this exception if the resource serializer not found.
- *
  * @author Vitaliy Zhuk <v.zhuk@fivelab.org>
  */
-class ResourceSerializerNotFoundException extends \Exception
+class NotSupportedClass implements ResourceInterface
 {
 }

@@ -12,6 +12,7 @@
 
 namespace FiveLab\Component\Resource\Tests\Serializer\Resolver;
 
+use FiveLab\Component\Resource\Resource\ResourceInterface;
 use FiveLab\Component\Resource\Serializer\Resolver\ResourceSerializerResolver;
 use FiveLab\Component\Resource\Serializer\Resolver\ResourceSerializerSupportableInterface;
 use FiveLab\Component\Resource\Serializer\ResourceSerializerInterface;
@@ -48,18 +49,18 @@ class ResourceSerializerResolverTest extends TestCase
 
         $supportable1->expects(self::once())
             ->method('supports')
-            ->with('application/json')
+            ->with(ResourceInterface::class, 'application/json')
             ->willReturn(false);
 
         $supportable2->expects(self::once())
             ->method('supports')
-            ->with('application/json')
+            ->with(ResourceInterface::class, 'application/json')
             ->willReturn(true);
 
         $this->resolver->add($supportable1, $serializer1);
         $this->resolver->add($supportable2, $serializer2);
 
-        $serializer = $this->resolver->resolveByMediaType('application/json');
+        $serializer = $this->resolver->resolveByMediaType(ResourceInterface::class, 'application/json');
 
         self::assertEquals($serializer2, $serializer);
     }
@@ -77,24 +78,24 @@ class ResourceSerializerResolverTest extends TestCase
 
         $supportable1->expects(self::exactly(2))
             ->method('supports')
-            ->with(self::logicalOr('application/json', 'application/hal+json'))
+            ->with(ResourceInterface::class, self::logicalOr('application/json', 'application/hal+json'))
             ->willReturnMap([
-                ['application/json', false],
-                ['application/hal+json', false]
+                [ResourceInterface::class, 'application/json', false],
+                [ResourceInterface::class, 'application/hal+json', false]
             ]);
 
         $supportable2->expects(self::exactly(2))
             ->method('supports')
-            ->with(self::logicalOr('application/json', 'application/hal+json'))
+            ->with(ResourceInterface::class, self::logicalOr('application/json', 'application/hal+json'))
             ->willReturnMap([
-                ['application/json', true],
-                ['application/hal+json', false]
+                [ResourceInterface::class, 'application/json', true],
+                [ResourceInterface::class, 'application/hal+json', false]
             ]);
 
         $this->resolver->add($supportable1, $serializer1);
         $this->resolver->add($supportable2, $serializer2);
 
-        $serializer = $this->resolver->resolveByMediaTypes(['application/hal+json', 'application/json'], $acceptFormat);
+        $serializer = $this->resolver->resolveByMediaTypes(ResourceInterface::class, ['application/hal+json', 'application/json'], $acceptFormat);
 
         self::assertEquals('application/json', $acceptFormat);
         self::assertEquals($serializer2, $serializer);
@@ -108,7 +109,7 @@ class ResourceSerializerResolverTest extends TestCase
      */
     public function shouldFailResolveByMediaTypeIfNotSupport(): void
     {
-        $this->resolver->resolveByMediaType('application/xml');
+        $this->resolver->resolveByMediaType(ResourceInterface::class, 'application/xml');
     }
 
     /**
@@ -119,6 +120,6 @@ class ResourceSerializerResolverTest extends TestCase
      */
     public function shouldFailResolveByMediaTypesIfNotSupport(): void
     {
-        $this->resolver->resolveByMediaTypes(['application/xml', 'application/hal+xml'], $acceptFormat);
+        $this->resolver->resolveByMediaTypes(ResourceInterface::class, ['application/xml', 'application/hal+xml'], $acceptFormat);
     }
 }

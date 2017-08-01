@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 /*
  * This file is part of the FiveLab Resource package
@@ -47,7 +47,7 @@ class Href implements HrefInterface
      */
     public function getPath(): string
     {
-         return $this->path;
+        return $this->path;
     }
 
     /**

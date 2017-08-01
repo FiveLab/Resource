@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 /*
  * This file is part of the FiveLab Resource package
@@ -21,25 +21,42 @@ namespace FiveLab\Component\Resource\Serializer\Resolver;
 class AcceptFormatSupportable implements ResourceSerializerSupportableInterface
 {
     /**
-     * @var string
+     * @var array
      */
     private $acceptedMediaTypes;
+
+    /**
+     * @var array
+     */
+    private $notSupportedClasses;
 
     /**
      * Constructor.
      *
      * @param array $acceptedMediaTypes
+     * @param array $notSupportedClasses
      */
-    public function __construct(array $acceptedMediaTypes)
+    public function __construct(array $acceptedMediaTypes, array $notSupportedClasses = [])
     {
         $this->acceptedMediaTypes = $acceptedMediaTypes;
+        $this->notSupportedClasses = $notSupportedClasses;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function supports(string $mediaType): bool
+    public function supports(string $resourceClass, string $mediaType): bool
     {
-        return in_array($mediaType, $this->acceptedMediaTypes, true);
+        if (!in_array($mediaType, $this->acceptedMediaTypes, true)) {
+            return false;
+        }
+
+        foreach ($this->notSupportedClasses as $notSupportedClass) {
+            if (is_a($resourceClass, $notSupportedClass, true)) {
+                return false;
+            }
+        }
+
+        return true;
     }
 }

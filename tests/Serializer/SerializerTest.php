@@ -53,7 +53,7 @@ class SerializerTest extends TestCase
         $this->objectNormalizer = new ObjectNormalizer();
         $this->jsonEncoder = new JsonEncoder();
 
-        $this->serializer = new Serializer($this->eventDispatcher, [$this->objectNormalizer], [$this->jsonEncoder]);
+        $this->serializer = new Serializer([$this->objectNormalizer], [$this->jsonEncoder], $this->eventDispatcher);
     }
 
     /**

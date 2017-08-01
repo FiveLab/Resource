@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 /*
  * This file is part of the FiveLab Resource package
@@ -32,6 +32,8 @@ class ResourceCollection extends AbstractResourceSupport implements \Iterator, \
      */
     public function __construct(ResourceInterface ...$resources)
     {
+        parent::__construct();
+
         $this->resources = func_get_args();
     }
 

@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 /*
  * This file is part of the FiveLab Resource package
@@ -33,19 +33,21 @@ class ResourceSerializerResolver implements ResourceSerializerResolverInterface
      * @param ResourceSerializerSupportableInterface $supportable
      * @param ResourceSerializerInterface            $serializer
      */
-    public function add(ResourceSerializerSupportableInterface $supportable, ResourceSerializerInterface $serializer): void
-    {
+    public function add(
+        ResourceSerializerSupportableInterface $supportable,
+        ResourceSerializerInterface $serializer
+    ): void {
         $this->map[] = [$supportable, $serializer];
     }
 
     /**
      * {@inheritdoc}
      */
-    public function resolveByMediaType(string $mediaType): ResourceSerializerInterface
+    public function resolveByMediaType(string $resourceClass, string $mediaType): ResourceSerializerInterface
     {
         /** @var ResourceSerializerSupportableInterface $supportable */
         foreach ($this->map as [$supportable, $serializer]) {
-            if ($supportable->supports($mediaType)) {
+            if ($supportable->supports($resourceClass, $mediaType)) {
                 return $serializer;
             }
         }
@@ -59,13 +61,16 @@ class ResourceSerializerResolver implements ResourceSerializerResolverInterface
     /**
      * {@inheritdoc}
      */
-    public function resolveByMediaTypes(array $mediaTypes, &$acceptMediaType): ResourceSerializerInterface
-    {
+    public function resolveByMediaTypes(
+        string $resourceClass,
+        array $mediaTypes,
+        &$acceptMediaType
+    ): ResourceSerializerInterface {
         $serializer = null;
 
         foreach ($mediaTypes as $mediaType) {
             try {
-                $serializer = $this->resolveByMediaType($mediaType);
+                $serializer = $this->resolveByMediaType($resourceClass, $mediaType);
                 $acceptMediaType = $mediaType;
 
                 break;

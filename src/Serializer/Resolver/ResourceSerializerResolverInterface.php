@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 /*
  * This file is part of the FiveLab Resource package
@@ -25,17 +25,19 @@ interface ResourceSerializerResolverInterface
     /**
      * Try resolve the serializer for media type
      *
+     * @param string $resourceClass
      * @param string $mediaType
      *
      * @return ResourceSerializerInterface
      *
      * @throws ResourceSerializerNotFoundException
      */
-    public function resolveByMediaType(string $mediaType): ResourceSerializerInterface;
+    public function resolveByMediaType(string $resourceClass, string $mediaType): ResourceSerializerInterface;
 
     /**
      * Try resolve the serializer from media types
      *
+     * @param string $resourceClass
      * @param array  $mediaTypes
      * @param string $acceptMediaType
      *
@@ -43,5 +45,9 @@ interface ResourceSerializerResolverInterface
      *
      * @throws ResourceSerializerNotFoundException
      */
-    public function resolveByMediaTypes(array $mediaTypes, &$acceptMediaType): ResourceSerializerInterface;
+    public function resolveByMediaTypes(
+        string $resourceClass,
+        array $mediaTypes,
+        &$acceptMediaType
+    ): ResourceSerializerInterface;
 }

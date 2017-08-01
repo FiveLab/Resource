@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 /*
  * This file is part of the FiveLab Resource package
@@ -23,9 +23,10 @@ interface ResourceSerializerSupportableInterface
     /**
      * Is support normalize the resource object to specified format?
      *
+     * @param string $resourceClass
      * @param string $mediaType
      *
      * @return bool
      */
-    public function supports(string $mediaType): bool;
+    public function supports(string $resourceClass, string $mediaType): bool;
 }

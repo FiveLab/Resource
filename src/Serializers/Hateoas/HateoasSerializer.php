@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 /*
  * This file is part of the FiveLab Resource package
@@ -59,7 +59,7 @@ class HateoasSerializer implements ResourceSerializerInterface
             'after_normalization' => function (array $data) {
                 return $this->fixRelations($data);
             },
-            'normalizers' => [
+            'normalizers'         => [
                 new RelationCollectionObjectNormalizer(),
                 new RelationObjectNormalizer(),
             ],

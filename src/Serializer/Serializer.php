@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 /*
  * This file is part of the FiveLab Resource package
@@ -42,9 +42,9 @@ class Serializer extends SymfonySerializer implements SerializerInterface
      * @param array                    $encoders
      */
     public function __construct(
-        EventDispatcherInterface $eventDispatcher,
-        array $normalizers = [],
-        array $encoders = []
+        array $normalizers,
+        array $encoders,
+        EventDispatcherInterface $eventDispatcher
     ) {
         parent::__construct($normalizers, $encoders);
 
