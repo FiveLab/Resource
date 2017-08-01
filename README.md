@@ -1,6 +1,9 @@
 Resource System
 ===============
 
+[![SensioLabsInsight](https://insight.sensiolabs.com/projects/e421183b-e493-4b40-a63a-87ff64c8a0b0/mini.png)](https://insight.sensiolabs.com/projects/e421183b-e493-4b40-a63a-87ff64c8a0b0)
+[![Build Status](https://api.travis-ci.org/FiveLab/Resource.svg?branch=master)](https://api.travis-ci.org/FiveLab/Resource)
+
 Add functionality for work with resources in you application and serialize this resources to any formats.
 
 Support formats:
