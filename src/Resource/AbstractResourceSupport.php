@@ -24,16 +24,24 @@ use FiveLab\Component\Resource\Resource\Relation\RelationInterface;
 abstract class AbstractResourceSupport implements ResourceInterface, RelatedResourceInterface
 {
     /**
-     * @var RelationInterface[]
+     * @var \SplObjectStorage|RelationInterface[]
      */
     private $relations = [];
+
+    /**
+     * Constructor.
+     */
+    public function __construct()
+    {
+        $this->relations = new \SplObjectStorage();
+    }
 
     /**
      * {@inheritdoc}
      */
     public function addRelation(RelationInterface $relation): void
     {
-        $this->relations[] = $relation;
+        $this->relations->attach($relation);
     }
 
     /**
@@ -41,7 +49,7 @@ abstract class AbstractResourceSupport implements ResourceInterface, RelatedReso
      */
     public function getRelations(): RelationCollection
     {
-        return new RelationCollection(...$this->relations);
+        return new RelationCollection(...iterator_to_array($this->relations));
     }
 
     /**
@@ -49,10 +57,6 @@ abstract class AbstractResourceSupport implements ResourceInterface, RelatedReso
      */
     public function removeRelation(RelationInterface $relation): void
     {
-        $key = array_search($relation, $this->relations, true);
-
-        if (null !== $key) {
-            unset($this->relations[$key]);
-        }
+        $this->relations->detach($relation);
     }
 }
