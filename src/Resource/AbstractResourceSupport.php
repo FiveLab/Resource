@@ -26,7 +26,7 @@ abstract class AbstractResourceSupport implements ResourceInterface, RelatedReso
     /**
      * @var \SplObjectStorage|RelationInterface[]
      */
-    private $relations = [];
+    private $relations;
 
     /**
      * Constructor.
