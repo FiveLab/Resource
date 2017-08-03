@@ -26,9 +26,9 @@ class RelationTest extends TestCase
     public function shouldSuccessCreate(): void
     {
         $href = $this->createMock(HrefInterface::class);
-        
+
         $relation = new Relation('some', $href, ['attr' => 'value']);
-        
+
         self::assertEquals('some', $relation->getName());
         self::assertEquals($href, $relation->getHref());
         self::assertEquals(['attr' => 'value'], $relation->getAttributes());
@@ -43,7 +43,7 @@ class RelationTest extends TestCase
         $newHref = $this->createMock(HrefInterface::class);
 
         $relation = new Relation('some', $href, ['attr' => 'value']);
-        
+
         $relation->setHref($newHref);
         $relation->setAttributes(['new-attr' => 'new-value']);
 

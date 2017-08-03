@@ -28,7 +28,7 @@ class MutableSerializationContextTest extends TestCase
         $context = new MutableSerializationContext([]);
 
         $cloned = $context->set('some', 'bar');
-        
+
         self::assertEquals('bar', $cloned->get('some'));
     }
 
@@ -39,7 +39,7 @@ class MutableSerializationContextTest extends TestCase
     {
         $context = new MutableSerializationContext([]);
         $childContext = new ResourceSerializationContext(['bar' => 'foo']);
-        
+
         $cloned = $context->merge($childContext);
 
         self::assertEquals('foo', $cloned->get('bar'));

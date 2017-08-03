@@ -32,7 +32,7 @@ class ErrorCollectionTest extends TestCase
             ['attr' => 'value'],
             'identifier'
         );
-        
+
         $collection->addErrors(new ErrorResource('some1'), new ErrorResource('some2'));
 
         self::assertEquals('message', $collection->getMessage());

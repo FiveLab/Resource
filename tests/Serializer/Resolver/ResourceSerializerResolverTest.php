@@ -81,7 +81,7 @@ class ResourceSerializerResolverTest extends TestCase
             ->with(ResourceInterface::class, self::logicalOr('application/json', 'application/hal+json'))
             ->willReturnMap([
                 [ResourceInterface::class, 'application/json', false],
-                [ResourceInterface::class, 'application/hal+json', false]
+                [ResourceInterface::class, 'application/hal+json', false],
             ]);
 
         $supportable2->expects(self::exactly(2))
@@ -89,7 +89,7 @@ class ResourceSerializerResolverTest extends TestCase
             ->with(ResourceInterface::class, self::logicalOr('application/json', 'application/hal+json'))
             ->willReturnMap([
                 [ResourceInterface::class, 'application/json', true],
-                [ResourceInterface::class, 'application/hal+json', false]
+                [ResourceInterface::class, 'application/hal+json', false],
             ]);
 
         $this->resolver->add($supportable1, $serializer1);

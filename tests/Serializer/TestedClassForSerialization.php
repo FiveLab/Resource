@@ -21,10 +21,10 @@ class TestedClassForSerialization implements ResourceInterface
     /**
      * @var string
      */
-    public $field1 = 'field1';
+    public $fieldFoo = 'field1';
 
     /**
      * @var array
      */
-    public $field2 = ['field2'];
+    public $fieldBar = ['field2'];
 }

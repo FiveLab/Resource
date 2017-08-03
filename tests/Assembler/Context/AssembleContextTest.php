@@ -26,15 +26,15 @@ class AssembleContextTest extends TestCase
     {
         $context = new AssembleContext([
             'some' => 'qwerty',
-            'bar' => 'foo',
+            'bar'  => 'foo',
         ]);
 
         self::assertEquals('qwerty', $context->get('some'));
         self::assertEquals('foo', $context->get('bar'));
-        
+
         // Get with default value
         self::assertEquals('bar', $context->get('foo', 'bar'));
-        
+
         // Get without default value
         self::assertNull($context->get('foo-bar'));
     }

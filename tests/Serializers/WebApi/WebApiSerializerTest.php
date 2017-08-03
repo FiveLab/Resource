@@ -59,7 +59,7 @@ class WebApiSerializerTest extends TestCase
             ->willReturnCallback(function ($resource, $format, $context) {
                 return json_encode($context['after_normalization']([
                     'relations' => ['some-foo-bar'],
-                    'some' => 'foo'
+                    'some'      => 'foo',
                 ]));
             });
 

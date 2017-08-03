@@ -51,7 +51,7 @@ class ObjectNormalizerTest extends TestCase
 
         $data = $this->normalizer->normalize(new CustomObjectForNormalize(), 'json', $context);
 
-        self::assertEquals(['field1' => 'value1', 'field2' => ['value2']], $data);
+        self::assertEquals(['fieldFoo' => 'value1', 'fieldBar' => ['value2']], $data);
         self::assertTrue($called, 'The callback is not executed.');
     }
 
@@ -77,7 +77,7 @@ class ObjectNormalizerTest extends TestCase
 
         $callable = function (array $data, CustomObjectForNormalize $object, $format, $context) use (&$called) {
             $called = true;
-            self::assertEquals(['field1' => 'value1', 'field2' => ['value2']], $data);
+            self::assertEquals(['fieldFoo' => 'value1', 'fieldBar' => ['value2']], $data);
 
             return $data;
         };
@@ -88,7 +88,7 @@ class ObjectNormalizerTest extends TestCase
 
         $data = $this->normalizer->normalize(new CustomObjectForNormalize(), 'json', $context);
 
-        self::assertEquals(['field1' => 'value1', 'field2' => ['value2']], $data);
+        self::assertEquals(['fieldFoo' => 'value1', 'fieldBar' => ['value2']], $data);
         self::assertTrue($called, 'The callback is not executed.');
     }
 
@@ -100,7 +100,8 @@ class ObjectNormalizerTest extends TestCase
      */
     public function shouldFailIfAfterNormalizationReturnNull(): void
     {
-        $callable = function (){};
+        $callable = function () {
+        };
 
         $context = ['after_normalization' => $callable];
 
@@ -129,12 +130,12 @@ class ObjectNormalizerTest extends TestCase
         $normalizer->setSerializer(new Serializer());
 
         $object = new CustomObjectForNormalize();
-        $object->field2 = '';
-        $object->field1 = null;
+        $object->fieldBar = '';
+        $object->fieldFoo = null;
 
         $data = $normalizer->normalize($object, 'some', []);
 
-        self::assertEquals(['field1' => null, 'field2' => ''], $data);
+        self::assertEquals(['fieldFoo' => null, 'fieldBar' => ''], $data);
     }
 
     /**
@@ -146,8 +147,8 @@ class ObjectNormalizerTest extends TestCase
         $normalizer->setSerializer(new Serializer());
 
         $object = new CustomObjectForNormalize();
-        $object->field2 = '';
-        $object->field1 = null;
+        $object->fieldBar = '';
+        $object->fieldFoo = null;
 
         $data = $normalizer->normalize($object, 'some', []);
 

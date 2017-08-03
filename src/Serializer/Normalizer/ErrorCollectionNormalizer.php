@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=1);
+declare(strict_types = 1);
 
 /*
  * This file is part of the FiveLab Resource package
@@ -64,8 +64,12 @@ class ErrorCollectionNormalizer implements NormalizerInterface, NormalizerAwareI
      *
      * @return array
      */
-    public function appendCollectionAttributes(array $data, ErrorCollection $error, string $format, array $context): array
-    {
+    public function appendCollectionAttributes(
+        array $data,
+        ErrorCollection $error,
+        string $format,
+        array $context
+    ): array {
         $innerError = new ErrorResource(
             $error->getMessage(),
             $error->getReason(),

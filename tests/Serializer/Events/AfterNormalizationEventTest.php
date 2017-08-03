@@ -26,7 +26,7 @@ class AfterNormalizationEventTest extends TestCase
     public function shouldSuccessCreate(): void
     {
         $resource = $this->createMock(ResourceInterface::class);
-        
+
         $event = new AfterNormalizationEvent($resource, ['normalized'], 'json', ['context']);
 
         self::assertEquals($resource, $event->getResource());

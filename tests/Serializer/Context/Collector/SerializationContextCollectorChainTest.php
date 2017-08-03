@@ -37,7 +37,7 @@ class SerializationContextCollectorChainTest extends TestCase
         $collector1->expects(self::once())
             ->method('collect')
             ->willReturn(new ResourceSerializationContext(['bar' => 'foo']));
-        
+
         $collector2->expects(self::once())
             ->method('collect')
             ->willReturn(new ResourceSerializationContext([]));

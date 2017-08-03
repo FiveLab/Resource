@@ -26,7 +26,7 @@ class AbstractResourceSupportTest extends TestCase
     public function shouldSuccessManipulateWithRelations(): void
     {
         $resource = new TestedResourceSupport();
-        
+
         self::assertCount(0, $resource->getRelations());
 
         $relation = $this->createMock(RelationInterface::class);

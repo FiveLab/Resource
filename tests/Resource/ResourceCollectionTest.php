@@ -27,7 +27,7 @@ class ResourceCollectionTest extends TestCase
     {
         $resource1 = $this->createMock(ResourceInterface::class);
         $resource2 = $this->createMock(ResourceInterface::class);
-        
+
         $collection = new ResourceCollection($resource1, $resource2);
 
         self::assertCount(2, $collection);

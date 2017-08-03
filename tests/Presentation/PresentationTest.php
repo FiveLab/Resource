@@ -39,7 +39,7 @@ class PresentationTest extends TestCase
     public function shouldSuccessCreateWithoutResource(): void
     {
         $presentation = new Presentation(204);
-        
+
         self::assertEquals(204, $presentation->getStatusCode());
         self::assertNull($presentation->getResource());
     }

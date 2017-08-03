@@ -19,10 +19,10 @@ class CustomObjectForNormalize
     /**
      * @var string
      */
-    public $field1 = 'value1';
+    public $fieldFoo = 'value1';
 
     /**
      * @var array
      */
-    public $field2 = ['value2'];
+    public $fieldBar = ['value2'];
 }

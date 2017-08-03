@@ -47,7 +47,7 @@ class ResourceAssemblerResolverTest extends TestCase
 
         $this->resolver->add($supportable1, $assembler1);
         $this->resolver->add($supportable2, $assembler2);
-        
+
         $supportable1->expects(self::once())
             ->method('supports')
             ->with(__CLASS__, \stdClass::class)
@@ -59,7 +59,7 @@ class ResourceAssemblerResolverTest extends TestCase
             ->willReturn(true);
 
         $assembler = $this->resolver->resolve(__CLASS__, \stdClass::class);
-        
+
         self::assertEquals($assembler2, $assembler);
     }
 

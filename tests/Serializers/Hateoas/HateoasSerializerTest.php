@@ -59,19 +59,19 @@ class HateoasSerializerTest extends TestCase
 
                 self::assertEquals([
                     new RelationCollectionObjectNormalizer(),
-                    new RelationObjectNormalizer()
+                    new RelationObjectNormalizer(),
                 ], $context['normalizers']);
 
                 return true;
             }))
             ->willReturnCallback(function (ResourceInterface $resource, $format, $context) {
                 $data = [
-                    'relations' => ['some-relation']
+                    'relations' => ['some-relation'],
                 ];
 
                 return json_encode($context['after_normalization']($data));
             });
-        
+
         $serialized = $this->hateoasSerializer->serialize($resource, new ResourceSerializationContext([]));
 
         self::assertEquals('{"_links":["some-relation"]}', $serialized);

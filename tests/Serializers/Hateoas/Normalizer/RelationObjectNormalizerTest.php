@@ -66,11 +66,11 @@ class RelationObjectNormalizerTest extends TestCase
         $normalized = $this->normalizer->normalize($relation, 'json');
 
         self::assertEquals([
-            'href' => '/self',
-            'templated' => true,
+            'href'       => '/self',
+            'templated'  => true,
             'attributes' => [
-                'field1' => 'value1'
-            ]
+                'field1' => 'value1',
+            ],
         ], $normalized);
     }
 

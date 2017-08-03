@@ -94,11 +94,11 @@ class ErrorCollectionNormalizerTest extends TestCase
 
         self::assertEquals([
             'message' => 'message',
-            'errors' => [
+            'errors'  => [
                 [
-                    'message' => 'inner message'
-                ]
-            ]
+                    'message' => 'inner message',
+                ],
+            ],
         ], $normalized);
     }
 }

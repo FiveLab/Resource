@@ -26,9 +26,9 @@ class PresentationFactoryTest extends TestCase
     public function shouldSuccessCreate(): void
     {
         $resource = $this->createMock(ResourceInterface::class);
-        
+
         $presentation = PresentationFactory::create(200, $resource);
-        
+
         self::assertEquals($resource, $presentation->getResource());
         self::assertEquals(200, $presentation->getStatusCode());
     }
@@ -39,7 +39,7 @@ class PresentationFactoryTest extends TestCase
     public function shouldSuccessCreateWithoutResource(): void
     {
         $presentation = PresentationFactory::create(200);
-        
+
         self::assertNull($presentation->getResource());
         self::assertEquals(200, $presentation->getStatusCode());
     }
@@ -50,7 +50,7 @@ class PresentationFactoryTest extends TestCase
     public function shouldSuccessCreateOk(): void
     {
         $resource = $this->createMock(ResourceInterface::class);
-        
+
         $presentation = PresentationFactory::ok($resource);
 
         self::assertEquals(200, $presentation->getStatusCode());
@@ -124,7 +124,7 @@ class PresentationFactoryTest extends TestCase
     public function shouldSuccessCreateNoContent(): void
     {
         $presentation = PresentationFactory::noContent();
-        
+
         self::assertEquals(204, $presentation->getStatusCode());
         self::assertNull($presentation->getResource());
     }
@@ -194,9 +194,9 @@ class PresentationFactoryTest extends TestCase
     public function shouldSuccessCreateForbidden(): void
     {
         $resource = $this->createMock(ResourceInterface::class);
-        
+
         $presentation = PresentationFactory::forbidden($resource);
-        
+
         self::assertEquals(403, $presentation->getStatusCode());
         self::assertEquals($resource, $presentation->getResource());
     }

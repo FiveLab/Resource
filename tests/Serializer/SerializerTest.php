@@ -63,7 +63,7 @@ class SerializerTest extends TestCase
     {
         $data = $this->serializer->serialize(new TestedClassForSerialization(), 'json', []);
 
-        self::assertEquals('{"field1":"field1","field2":["field2"]}', $data);
+        self::assertEquals('{"fieldFoo":"field1","fieldBar":["field2"]}', $data);
     }
 
     /**
@@ -74,9 +74,11 @@ class SerializerTest extends TestCase
         $called = false;
 
         $context = [
-            'normalizers' => [new CustomNormalizer(function () use (&$called) {
-                $called = true;
-            })]
+            'normalizers' => [
+                new CustomNormalizer(function () use (&$called) {
+                    $called = true;
+                }),
+            ],
         ];
 
         $data = $this->serializer->serialize(new TestedClassForSerialization(), 'json', $context);
@@ -94,9 +96,11 @@ class SerializerTest extends TestCase
     public function shouldSuccessCleanNormalizersAfterCatchException(): void
     {
         $context = [
-            'normalizers' => [new CustomNormalizer(function () {
-                throw new \RuntimeException('some foo bar');
-            })]
+            'normalizers' => [
+                new CustomNormalizer(function () {
+                    throw new \RuntimeException('some foo bar');
+                }),
+            ],
         ];
 
         try {
@@ -132,7 +136,7 @@ class SerializerTest extends TestCase
             ->method('dispatch')
             ->with(
                 'fivelab.serializer.normalization.after',
-                new AfterNormalizationEvent($resource, ['field1' => 'field1', 'field2' => ['field2']], 'json', [])
+                new AfterNormalizationEvent($resource, ['fieldFoo' => 'field1', 'fieldBar' => ['field2']], 'json', [])
             );
 
         $this->serializer->serialize($resource, 'json', []);

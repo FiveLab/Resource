@@ -27,11 +27,11 @@ class RelationCollectionTest extends TestCase
     {
         $relation1 = $this->createMock(RelationInterface::class);
         $relation2 = $this->createMock(RelationInterface::class);
-        
+
         $collection = new RelationCollection($relation1, $relation2);
-        
+
         self::assertCount(2, $collection);
-        
+
         self::assertEquals([$relation1, $relation2], iterator_to_array($collection));
     }
 }

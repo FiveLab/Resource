@@ -38,7 +38,7 @@ class AbstractResourceAssemblerSupportTest extends TestCase
     public function shouldSuccessConvertToResource(): void
     {
         $resource = $this->assembler->toResource(new \stdClass());
-        
+
         self::assertEquals(new TestedResource(), $resource);
     }
 
@@ -48,7 +48,7 @@ class AbstractResourceAssemblerSupportTest extends TestCase
     public function shouldSuccessConvertToResources(): void
     {
         $resources = $this->assembler->toResources(new \ArrayIterator([new \stdClass(), new \stdClass()]));
-        
+
         self::assertEquals(new ResourceCollection(new TestedResource(), new TestedResource()), $resources);
     }
 }
