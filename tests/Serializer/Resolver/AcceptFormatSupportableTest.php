@@ -36,8 +36,28 @@ class AcceptFormatSupportableTest extends TestCase
      */
     public function shouldNotSupportIfClassNotSupported(): void
     {
-        $supportable = new AcceptFormatSupportable(['application/json'], [NotSupportedClass::class]);
+        $supportable = new AcceptFormatSupportable(['application/json'], [], [NotSupportedClass::class]);
 
         self::assertFalse($supportable->supports(NotSupportedClass::class, 'application/json'));
+    }
+
+    /**
+     * @test
+     */
+    public function shouldSupportIfClassIsSupported(): void
+    {
+        $supportable = new AcceptFormatSupportable(['application/xml'], [SupportedClass::class]);
+
+        self::assertTrue($supportable->supports(SupportedClass::class, 'application/xml'));
+    }
+
+    /**
+     * @test
+     */
+    public function shouldNotSupportIfPassNotSupportedClassToSupported(): void
+    {
+        $supportable = new AcceptFormatSupportable(['application/xml'], [SupportedClass::class]);
+
+        self::assertFalse($supportable->supports(NotSupportedClass::class, 'application/xml'));
     }
 }

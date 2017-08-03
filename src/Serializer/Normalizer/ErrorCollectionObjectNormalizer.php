@@ -24,7 +24,7 @@ use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
  *
  * @author Vitaliy Zhuk <v.zhuk@fivelab.org>
  */
-class ErrorCollectionNormalizer implements NormalizerInterface, NormalizerAwareInterface
+class ErrorCollectionObjectNormalizer implements NormalizerInterface, NormalizerAwareInterface
 {
     use NormalizerAwareTrait;
 

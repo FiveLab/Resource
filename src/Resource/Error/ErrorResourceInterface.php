@@ -14,6 +14,7 @@ declare(strict_types = 1);
 namespace FiveLab\Component\Resource\Resource\Error;
 
 use FiveLab\Component\Resource\Resource\Href\HrefInterface;
+use FiveLab\Component\Resource\Resource\RelatedResourceInterface;
 use FiveLab\Component\Resource\Resource\ResourceInterface;
 
 /**
@@ -21,7 +22,7 @@ use FiveLab\Component\Resource\Resource\ResourceInterface;
  *
  * @author Vitaliy Zhuk <v.zhuk@fivelab.org>
  */
-interface ErrorResourceInterface extends ResourceInterface
+interface ErrorResourceInterface extends ResourceInterface, RelatedResourceInterface
 {
     /**
      * Get the message of error.

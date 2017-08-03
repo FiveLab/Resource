@@ -16,7 +16,7 @@ use FiveLab\Component\Resource\Resource\Error\ErrorResource;
 use FiveLab\Component\Resource\Resource\Error\ErrorResourceInterface;
 use FiveLab\Component\Resource\Resource\Href\Href;
 use FiveLab\Component\Resource\Resource\Relation\Relation;
-use FiveLab\Component\Resource\Serializer\Normalizer\ErrorCollectionNormalizer;
+use FiveLab\Component\Resource\Serializer\Normalizer\ErrorCollectionObjectNormalizer;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
@@ -31,7 +31,7 @@ class ErrorCollectionNormalizerTest extends TestCase
     private $normalizer;
 
     /**
-     * @var ErrorCollectionNormalizer
+     * @var ErrorCollectionObjectNormalizer
      */
     private $collectionNormalizer;
 
@@ -41,7 +41,7 @@ class ErrorCollectionNormalizerTest extends TestCase
     protected function setUp(): void
     {
         $this->normalizer = $this->createMock(NormalizerInterface::class);
-        $this->collectionNormalizer = new ErrorCollectionNormalizer();
+        $this->collectionNormalizer = new ErrorCollectionObjectNormalizer();
         $this->collectionNormalizer->setNormalizer($this->normalizer);
     }
 
