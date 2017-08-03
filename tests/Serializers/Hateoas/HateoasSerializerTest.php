@@ -15,6 +15,7 @@ use FiveLab\Component\Resource\Resource\ResourceInterface;
 use FiveLab\Component\Resource\Serializer\Context\ResourceSerializationContext;
 use FiveLab\Component\Resource\Serializer\SerializerInterface;
 use FiveLab\Component\Resource\Serializers\Hateoas\HateoasSerializer;
+use FiveLab\Component\Resource\Serializers\Hateoas\Normalizer\PaginatedCollectionObjectNormalizer;
 use FiveLab\Component\Resource\Serializers\Hateoas\Normalizer\RelationCollectionObjectNormalizer;
 use FiveLab\Component\Resource\Serializers\Hateoas\Normalizer\RelationObjectNormalizer;
 use PHPUnit\Framework\TestCase;
@@ -58,6 +59,7 @@ class HateoasSerializerTest extends TestCase
                 self::assertArrayHasKey('normalizers', $context);
 
                 self::assertEquals([
+                    new PaginatedCollectionObjectNormalizer(),
                     new RelationCollectionObjectNormalizer(),
                     new RelationObjectNormalizer(),
                 ], $context['normalizers']);
