@@ -37,9 +37,9 @@ class Serializer extends SymfonySerializer implements SerializerInterface
     /**
      * Constructor.
      *
-     * @param EventDispatcherInterface $eventDispatcher
      * @param array                    $normalizers
      * @param array                    $encoders
+     * @param EventDispatcherInterface $eventDispatcher
      */
     public function __construct(
         array $normalizers,
@@ -59,7 +59,7 @@ class Serializer extends SymfonySerializer implements SerializerInterface
     public function normalize($data, $format = null, array $context = [])
     {
         if ($data instanceof ResourceInterface) {
-            $event = new BeforeNormalizationEvent($data, $format, $context);
+            $event = new BeforeNormalizationEvent($data, (string) $format, $context);
             $this->eventDispatcher->dispatch(SerializationEvents::BEFORE_NORMALIZATION, $event);
         }
 
@@ -78,16 +78,14 @@ class Serializer extends SymfonySerializer implements SerializerInterface
 
         try {
             $normalized = parent::normalize($data, $format, $context);
-        } catch (\Exception $e) {
+        } finally {
             for ($i = 0; $i < $countNormalizers; $i++) {
                 array_shift($this->normalizers);
             }
-
-            throw $e;
         }
 
         if ($data instanceof ResourceInterface) {
-            $event = new AfterNormalizationEvent($data, $normalized, $format, $context);
+            $event = new AfterNormalizationEvent($data, $normalized, (string) $format, $context);
             $this->eventDispatcher->dispatch(SerializationEvents::AFTER_NORMALIZATION, $event);
         }
 

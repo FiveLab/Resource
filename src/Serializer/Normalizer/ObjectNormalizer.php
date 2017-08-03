@@ -60,7 +60,7 @@ class ObjectNormalizer extends SymfonyObjectNormalizer
      * @throws \InvalidArgumentException
      * @throws \LogicException
      */
-    public function normalize($object, $format = null, array $context = [])
+    public function normalize($object, $format = null, array $context = []): array
     {
         // Call to before normalization callback
         if (array_key_exists('before_normalization', $context)) {
