@@ -21,7 +21,7 @@ use FiveLab\Component\Resource\Resource\Relation\RelationInterface;
  *
  * @author Vitaliy Zhuk <v.zhuk@fivelab.org>
  */
-interface RelatedResourceInterface
+interface RelatedResourceInterface extends ResourceInterface
 {
     /**
      * Add the relation to resource
