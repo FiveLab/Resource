@@ -18,6 +18,8 @@ use FiveLab\Component\Resource\Serializer\Context\ResourceSerializationContext;
 use FiveLab\Component\Resource\Serializer\Exception\DeserializationNotSupportException;
 use FiveLab\Component\Resource\Serializer\ResourceSerializerInterface;
 use FiveLab\Component\Resource\Serializer\SerializerInterface;
+use FiveLab\Component\Resource\Serializers\Hateoas\Normalizer\RelationCollectionObjectNormalizer;
+use FiveLab\Component\Resource\Serializers\Hateoas\Normalizer\RelationObjectNormalizer;
 use FiveLab\Component\Resource\Serializers\VndError\Normalizer\ErrorCollectionObjectNormalizer;
 use FiveLab\Component\Resource\Serializers\VndError\Normalizer\ErrorResourceObjectNormalizer;
 
@@ -59,6 +61,8 @@ class VndErrorSerializer implements ResourceSerializerInterface
             'normalizers' => [
                 new ErrorResourceObjectNormalizer(),
                 new ErrorCollectionObjectNormalizer(),
+                new RelationObjectNormalizer(),
+                new RelationCollectionObjectNormalizer(),
             ],
         ];
 

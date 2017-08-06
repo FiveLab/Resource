@@ -11,6 +11,8 @@
 
 namespace FiveLab\Component\Resource\Tests\Serializers\VndError\Normalizer;
 
+use FiveLab\Component\Resource\Resource\Action\ActionCollection;
+use FiveLab\Component\Resource\Resource\Action\ActionInterface;
 use FiveLab\Component\Resource\Resource\Error\ErrorResource;
 use FiveLab\Component\Resource\Resource\Error\ErrorResourceInterface;
 use FiveLab\Component\Resource\Resource\Relation\RelationCollection;
@@ -71,13 +73,27 @@ class ErrorResourceObjectNormalizerTest extends TestCase
     public function shouldSuccessNormalize(): void
     {
         $relation = $this->createMock(RelationInterface::class);
+        $action = $this->createMock(ActionInterface::class);
         $error = new ErrorResource('message', 'reason', 'path', ['attr'], 'identifier');
         $error->addRelation($relation);
+        $error->addAction($action);
 
-        $this->normalizer->expects(self::once())
+        $this->normalizer->expects(self::exactly(2))
             ->method('normalize')
-            ->with(new RelationCollection($relation), 'json', ['context'])
-            ->willReturn(['normalized-relations']);
+            ->with(self::logicalOr(new RelationCollection($relation), new ActionCollection($action)), 'json', ['context'])
+            ->willReturnCallback(function ($data) {
+                if ($data instanceof RelationCollection) {
+                    return ['normalized-relations'];
+                }
+
+                if ($data instanceof ActionCollection) {
+                    return ['normalized-actions'];
+                }
+
+                self::fail('Invalid type of data');
+
+                return null;
+            });
 
         $normalized = $this->errorNormalizer->normalize($error, 'json', ['context']);
 
@@ -85,7 +101,7 @@ class ErrorResourceObjectNormalizerTest extends TestCase
             'message' => 'message',
             'path'    => 'path',
             'logref'  => 'identifier',
-            '_links'  => ['normalized-relations'],
+            '_links'  => ['normalized-relations', 'normalized-actions'],
         ], $normalized);
     }
 }

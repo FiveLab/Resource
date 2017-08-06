@@ -11,6 +11,9 @@
 
 namespace FiveLab\Component\Resource\Tests\Serializers\Hateoas\Normalizer;
 
+use FiveLab\Component\Resource\Resource\Action\Action;
+use FiveLab\Component\Resource\Resource\Action\ActionCollection;
+use FiveLab\Component\Resource\Resource\Action\Method;
 use FiveLab\Component\Resource\Resource\Href\Href;
 use FiveLab\Component\Resource\Resource\Relation\Relation;
 use FiveLab\Component\Resource\Resource\Relation\RelationCollection;
@@ -46,9 +49,19 @@ class RelationCollectionObjectNormalizerTest extends TestCase
     /**
      * @test
      */
-    public function shouldSuccessSupport(): void
+    public function shouldSuccessSupportRelationCollection(): void
     {
         $supports = $this->normalizer->supportsNormalization(new RelationCollection());
+        self::assertTrue($supports);
+    }
+
+    /**
+     * @test
+     */
+    public function shouldSuccessSupportActionCollection(): void
+    {
+        $supports = $this->normalizer->supportsNormalization(new ActionCollection());
+
         self::assertTrue($supports);
     }
 
@@ -64,7 +77,7 @@ class RelationCollectionObjectNormalizerTest extends TestCase
     /**
      * @test
      */
-    public function shouldSuccessNormalize(): void
+    public function shouldSuccessNormalizeRelationCollection(): void
     {
         $relation = new Relation('self', new Href('/self'), ['attr' => 'value']);
         $collection = new RelationCollection($relation);
@@ -88,9 +101,34 @@ class RelationCollectionObjectNormalizerTest extends TestCase
 
     /**
      * @test
+     */
+    public function shouldSuccessNormalizeActionCollection(): void
+    {
+        $action = new Action('self', new Href('/self'), Method::post(), ['attr' => 'value']);
+        $collection = new ActionCollection($action);
+
+        $this->innerNormalizer->expects(self::once())
+            ->method('normalize')
+            ->with($action)
+            ->willReturn(['href' => '/self', 'attributes' => ['attr' => 'value']]);
+
+        $normalized = $this->normalizer->normalize($collection);
+
+        self::assertEquals([
+            'self' => [
+                'href' => '/self',
+                'attributes' => [
+                    'attr' => 'value',
+                ],
+            ],
+        ], $normalized);
+    }
+
+    /**
+     * @test
      *
      * @expectedException \InvalidArgumentException
-     * @expectedExceptionMessage The normalizer support only "FiveLab\Component\Resource\Resource\Relation\RelationCollection" but "stdClass" given.
+     * @expectedExceptionMessage The normalizer support only "FiveLab\Component\Resource\Resource\Relation\RelationCollection" or "FiveLab\Component\Resource\Resource\Action\ActionCollection" but "stdClass" given.
      */
     public function shouldFailNormalizeIfSendInvalidObject(): void
     {

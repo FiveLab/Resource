@@ -11,6 +11,8 @@
 
 namespace FiveLab\Component\Resource\Tests\Serializers\VndError\Normalizer;
 
+use FiveLab\Component\Resource\Resource\Action\ActionCollection;
+use FiveLab\Component\Resource\Resource\Action\ActionInterface;
 use FiveLab\Component\Resource\Resource\Error\ErrorCollection;
 use FiveLab\Component\Resource\Resource\Error\ErrorResource;
 use FiveLab\Component\Resource\Resource\Relation\RelationCollection;
@@ -71,19 +73,25 @@ class ErrorCollectionObjectNormalizerTest extends TestCase
     public function shouldSuccessNormalizeWithNested(): void
     {
         $relation = $this->createMock(RelationInterface::class);
+        $action = $this->createMock(ActionInterface::class);
         $inner = new ErrorResource('inner-message', 'inner-reason', 'inner-path', ['attr'], 'identifier');
         $error = new ErrorCollection('message', 'reason', 'path', ['attr'], 'identifier');
         $error->addErrors($inner);
         $error->addRelation($relation);
+        $error->addAction($action);
 
         $primaryError = new ErrorResource('message', 'reason', 'path', ['attr'], 'identifier');
 
-        $this->normalizer->expects(self::exactly(3))
+        $this->normalizer->expects(self::exactly(4))
             ->method('normalize')
-            ->with(self::logicalOr($inner, $primaryError, new RelationCollection($relation)), 'json', ['context'])
+            ->with(self::logicalOr($inner, $primaryError, new RelationCollection($relation), new ActionCollection($action)), 'json', ['context'])
             ->willReturnCallback(function ($error) {
                 if ($error instanceof RelationCollection) {
                     return ['normalized-relation'];
+                }
+
+                if ($error instanceof ActionCollection) {
+                    return ['normalized-actions'];
                 }
 
                 return [
@@ -95,7 +103,7 @@ class ErrorCollectionObjectNormalizerTest extends TestCase
 
         self::assertEquals([
             'message'   => 'message',
-            '_links'    => ['normalized-relation'],
+            '_links'    => ['normalized-relation', 'normalized-actions'],
             '_embedded' => [
                 'errors' => [
                     ['message' => 'inner-message'],
@@ -109,14 +117,20 @@ class ErrorCollectionObjectNormalizerTest extends TestCase
      */
     public function shouldSuccessNormalizeWithoutNested(): void
     {
+        $relation = $this->createMock(RelationInterface::class);
         $inner = new ErrorResource('inner-message', 'inner-reason', 'inner-path', ['attr'], 'identifier');
         $error = new ErrorCollection('');
         $error->addErrors($inner);
+        $error->addRelation($relation);
 
-        $this->normalizer->expects(self::exactly(1))
+        $this->normalizer->expects(self::exactly(2))
             ->method('normalize')
-            ->with($inner, 'json', ['context'])
+            ->with(self::logicalOr($inner, new RelationCollection($relation)), 'json', ['context'])
             ->willReturnCallback(function ($error) {
+                if ($error instanceof RelationCollection) {
+                    return ['normalized-relations'];
+                }
+
                 return [
                     'message' => $error->getMessage(),
                 ];
@@ -126,6 +140,9 @@ class ErrorCollectionObjectNormalizerTest extends TestCase
 
         self::assertEquals([
             'total'     => 1,
+            '_links' => [
+                'normalized-relations',
+            ],
             '_embedded' => [
                 'errors' => [
                     ['message' => 'inner-message'],

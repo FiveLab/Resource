@@ -14,6 +14,8 @@ namespace FiveLab\Component\Resource\Tests\Serializers\VndError;
 use FiveLab\Component\Resource\Resource\ResourceInterface;
 use FiveLab\Component\Resource\Serializer\Context\ResourceSerializationContext;
 use FiveLab\Component\Resource\Serializer\SerializerInterface;
+use FiveLab\Component\Resource\Serializers\Hateoas\Normalizer\RelationCollectionObjectNormalizer;
+use FiveLab\Component\Resource\Serializers\Hateoas\Normalizer\RelationObjectNormalizer;
 use FiveLab\Component\Resource\Serializers\VndError\Normalizer\ErrorCollectionObjectNormalizer;
 use FiveLab\Component\Resource\Serializers\VndError\Normalizer\ErrorResourceObjectNormalizer;
 use FiveLab\Component\Resource\Serializers\VndError\VndErrorSerializer;
@@ -56,6 +58,8 @@ class VndErrorSerializerTest extends TestCase
                 'normalizers' => [
                     new ErrorResourceObjectNormalizer(),
                     new ErrorCollectionObjectNormalizer(),
+                    new RelationObjectNormalizer(),
+                    new RelationCollectionObjectNormalizer(),
                 ],
             ])
             ->willReturn('some-serialized');

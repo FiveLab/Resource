@@ -51,6 +51,16 @@ class ErrorCollectionObjectNormalizer implements NormalizerInterface, Normalizer
             $errors[] = $this->normalizer->normalize($item, $format, $context);
         }
 
+        $links = [];
+
+        if (count($object->getRelations())) {
+            $links = array_merge($links, $this->normalizer->normalize($object->getRelations(), $format, $context));
+        }
+
+        if (count($object->getActions())) {
+            $links = array_merge($links, $this->normalizer->normalize($object->getActions(), $format, $context));
+        }
+
         if ($nested) {
             $innerError = new ErrorResource(
                 $object->getMessage(),
@@ -62,8 +72,8 @@ class ErrorCollectionObjectNormalizer implements NormalizerInterface, Normalizer
 
             $data = $this->normalizer->normalize($innerError, $format, $context);
 
-            if (count($object->getRelations())) {
-                $data['_links'] = $this->normalizer->normalize($object->getRelations(), $format, $context);
+            if (count($links)) {
+                $data['_links'] = $links;
             }
 
             $data['_embedded'] = [
@@ -73,11 +83,17 @@ class ErrorCollectionObjectNormalizer implements NormalizerInterface, Normalizer
             return $data;
         }
 
-        return [
+        $data = [
             'total' => count($errors),
             '_embedded' => [
                 'errors' => $errors,
             ],
         ];
+
+        if (count($links)) {
+            $data['_links'] = $links;
+        }
+
+        return $data;
     }
 }

@@ -11,6 +11,8 @@
 
 namespace FiveLab\Component\Resource\Tests\Resource;
 
+use FiveLab\Component\Resource\Resource\Action\ActionCollection;
+use FiveLab\Component\Resource\Resource\Action\ActionInterface;
 use FiveLab\Component\Resource\Resource\Relation\RelationCollection;
 use FiveLab\Component\Resource\Resource\Relation\RelationInterface;
 use PHPUnit\Framework\TestCase;
@@ -37,5 +39,24 @@ class AbstractResourceSupportTest extends TestCase
 
         $resource->removeRelation($relation);
         self::assertCount(0, $resource->getRelations());
+    }
+
+    /**
+     * @test
+     */
+    public function shouldSuccessManipulateWithActions(): void
+    {
+        $resource = new TestedResourceSupport();
+
+        self::assertCount(0, $resource->getActions());
+
+        $action = $this->createMock(ActionInterface::class);
+        $resource->addAction($action);
+
+        self::assertCount(1, $resource->getActions());
+        self::assertEquals(new ActionCollection($action), $resource->getActions());
+
+        $resource->removeAction($action);
+        self::assertCount(0, $resource->getActions());
     }
 }

@@ -42,7 +42,15 @@ class ErrorResourceObjectNormalizer implements NormalizerInterface, NormalizerAw
      */
     public function normalize($object, $format = null, array $context = []): array
     {
-        $relations = $this->normalizer->normalize($object->getRelations(), $format, $context);
+        $links = [];
+
+        if (count($object->getRelations())) {
+            $links = array_merge($links, $this->normalizer->normalize($object->getRelations(), $format, $context));
+        }
+
+        if (count($object->getActions())) {
+            $links = array_merge($links, $this->normalizer->normalize($object->getActions(), $format, $context));
+        }
 
         $data = [
             'message' => $object->getMessage(),
@@ -56,8 +64,8 @@ class ErrorResourceObjectNormalizer implements NormalizerInterface, NormalizerAw
             $data['logref'] = $object->getIdentifier();
         }
 
-        if (count($relations)) {
-            $data['_links'] = $relations;
+        if (count($links)) {
+            $data['_links'] = $links;
         }
 
         return $data;

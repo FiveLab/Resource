@@ -92,9 +92,20 @@ class HateoasSerializer implements ResourceSerializerInterface
      */
     public function fixRelations(array $data): array
     {
+        $links = [];
+
         if (array_key_exists('relations', $data)) {
-            $data['_links'] = $data['relations'];
+            $links = array_merge($links, $data['relations']);
             unset($data['relations']);
+        }
+
+        if (array_key_exists('actions', $data)) {
+            $links = array_merge($links, $data['actions']);
+            unset($data['actions']);
+        }
+
+        if (count($links)) {
+            $data['_links'] = $links;
         }
 
         return $data;

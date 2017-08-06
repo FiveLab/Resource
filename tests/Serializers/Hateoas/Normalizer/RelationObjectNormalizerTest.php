@@ -11,6 +11,9 @@
 
 namespace FiveLab\Component\Resource\Tests\Serializers\Hateoas\Normalizer;
 
+use FiveLab\Component\Resource\Resource\Action\Action;
+use FiveLab\Component\Resource\Resource\Action\ActionInterface;
+use FiveLab\Component\Resource\Resource\Action\Method;
 use FiveLab\Component\Resource\Resource\Href\Href;
 use FiveLab\Component\Resource\Resource\Relation\Relation;
 use FiveLab\Component\Resource\Resource\Relation\RelationInterface;
@@ -38,10 +41,21 @@ class RelationObjectNormalizerTest extends TestCase
     /**
      * @test
      */
-    public function shouldSuccessSupports(): void
+    public function shouldSuccessSupportsRelation(): void
     {
         $relation = $this->createMock(RelationInterface::class);
         $supports = $this->normalizer->supportsNormalization($relation, 'json');
+
+        self::assertTrue($supports);
+    }
+
+    /**
+     * @test
+     */
+    public function shouldSuccessSupportAction(): void
+    {
+        $action = $this->createMock(ActionInterface::class);
+        $supports = $this->normalizer->supportsNormalization($action, 'json');
 
         self::assertTrue($supports);
     }
@@ -59,7 +73,7 @@ class RelationObjectNormalizerTest extends TestCase
     /**
      * @test
      */
-    public function shouldSuccessNormalize(): void
+    public function shouldSuccessNormalizeRelation(): void
     {
         $relation = new Relation('self', new Href('/self', true), ['field1' => 'value1']);
 
@@ -76,9 +90,27 @@ class RelationObjectNormalizerTest extends TestCase
 
     /**
      * @test
+     */
+    public function shouldSuccessNormalizeAction(): void
+    {
+        $action = new Action('self', new Href('/self', true), Method::post(), ['field1' => 'value1']);
+
+        $normalized = $this->normalizer->normalize($action, 'json');
+
+        self::assertEquals([
+            'href'       => '/self',
+            'templated'  => true,
+            'attributes' => [
+                'field1' => 'value1',
+            ],
+        ], $normalized);
+    }
+
+    /**
+     * @test
      *
      * @expectedException \InvalidArgumentException
-     * @expectedExceptionMessage The normalizer support only "FiveLab\Component\Resource\Resource\Relation\RelationInterface" but "stdClass" given.
+     * @expectedExceptionMessage The normalizer support only "FiveLab\Component\Resource\Resource\Relation\RelationInterface" or "FiveLab\Component\Resource\Resource\Action\ActionInterface" but "stdClass" given.
      */
     public function shouldFailNormalizeIfSendInvalidObject(): void
     {

@@ -13,6 +13,8 @@ declare(strict_types = 1);
 
 namespace FiveLab\Component\Resource\Resource;
 
+use FiveLab\Component\Resource\Resource\Action\ActionCollection;
+use FiveLab\Component\Resource\Resource\Action\ActionInterface;
 use FiveLab\Component\Resource\Resource\Relation\RelationCollection;
 use FiveLab\Component\Resource\Resource\Relation\RelationInterface;
 
@@ -21,7 +23,7 @@ use FiveLab\Component\Resource\Resource\Relation\RelationInterface;
  *
  * @author Vitaliy Zhuk <v.zhuk@fivelab.org>
  */
-abstract class AbstractResourceSupport implements ResourceInterface, RelatedResourceInterface
+abstract class AbstractResourceSupport implements ResourceInterface, RelatedResourceInterface, ActionedResourceInterface
 {
     /**
      * @var \SplObjectStorage|RelationInterface[]
@@ -29,11 +31,17 @@ abstract class AbstractResourceSupport implements ResourceInterface, RelatedReso
     private $relations;
 
     /**
+     * @var \SplObjectStorage|ActionInterface[]
+     */
+    private $actions;
+
+    /**
      * Constructor.
      */
     public function __construct()
     {
         $this->relations = new \SplObjectStorage();
+        $this->actions = new \SplObjectStorage();
     }
 
     /**
@@ -58,5 +66,29 @@ abstract class AbstractResourceSupport implements ResourceInterface, RelatedReso
     public function removeRelation(RelationInterface $relation): void
     {
         $this->relations->detach($relation);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function addAction(ActionInterface $action): void
+    {
+        $this->actions->attach($action);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getActions(): ActionCollection
+    {
+        return new ActionCollection(...iterator_to_array($this->actions));
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function removeAction(ActionInterface $action): void
+    {
+        $this->actions->detach($action);
     }
 }

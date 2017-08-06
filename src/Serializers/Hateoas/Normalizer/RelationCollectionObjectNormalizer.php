@@ -13,6 +13,7 @@ declare(strict_types = 1);
 
 namespace FiveLab\Component\Resource\Serializers\Hateoas\Normalizer;
 
+use FiveLab\Component\Resource\Resource\Action\ActionCollection;
 use FiveLab\Component\Resource\Resource\Relation\RelationCollection;
 use Symfony\Component\Serializer\Normalizer\NormalizerAwareInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerAwareTrait;
@@ -36,10 +37,11 @@ class RelationCollectionObjectNormalizer implements NormalizerInterface, Normali
      */
     public function normalize($object, $format = null, array $context = []): array
     {
-        if (!$object instanceof RelationCollection) {
+        if (!$object instanceof RelationCollection && !$object instanceof ActionCollection) {
             throw new \InvalidArgumentException(sprintf(
-                'The normalizer support only "%s" but "%s" given.',
+                'The normalizer support only "%s" or "%s" but "%s" given.',
                 RelationCollection::class,
+                ActionCollection::class,
                 is_object($object) ? get_class($object) : gettype($object)
             ));
         }
@@ -58,6 +60,6 @@ class RelationCollectionObjectNormalizer implements NormalizerInterface, Normali
      */
     public function supportsNormalization($data, $format = null): bool
     {
-        return is_object($data) && $data instanceof RelationCollection;
+        return is_object($data) && ($data instanceof RelationCollection || $data instanceof ActionCollection);
     }
 }

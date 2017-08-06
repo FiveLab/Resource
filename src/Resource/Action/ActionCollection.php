@@ -11,44 +11,44 @@ declare(strict_types = 1);
  * file that was distributed with this source code
  */
 
-namespace FiveLab\Component\Resource\Resource\Relation;
+namespace FiveLab\Component\Resource\Resource\Action;
 
 /**
- * The collection for store relations.
+ * The collection for store resource actions.
  *
  * @author Vitaliy Zhuk <v.zhuk@fivelab.org>
  */
-class RelationCollection implements \Iterator, \Countable
+class ActionCollection implements \Iterator, \Countable
 {
     /**
-     * @var array|RelationInterface[]
+     * @var array
      */
-    private $relations;
+    private $actions;
 
     /**
      * Constructor.
      *
-     * @param RelationInterface[] ...$relations
+     * @param ActionInterface[] ...$actions
      */
-    public function __construct(RelationInterface ...$relations)
+    public function __construct(ActionInterface ...$actions)
     {
-        $this->relations = func_get_args();
+        $this->actions = $actions;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function current(): RelationInterface
+    public function current(): ActionInterface
     {
-        return current($this->relations);
+        return current($this->actions);
     }
 
     /**
      * {@inheritdoc}
      */
-    public function next()
+    public function next(): void
     {
-        return next($this->relations);
+        next($this->actions);
     }
 
     /**
@@ -56,7 +56,7 @@ class RelationCollection implements \Iterator, \Countable
      */
     public function key()
     {
-        return key($this->relations);
+        return key($this->actions);
     }
 
     /**
@@ -64,7 +64,7 @@ class RelationCollection implements \Iterator, \Countable
      */
     public function valid(): bool
     {
-        return key($this->relations) !== null;
+        return key($this->actions) !== null;
     }
 
     /**
@@ -72,7 +72,7 @@ class RelationCollection implements \Iterator, \Countable
      */
     public function rewind(): void
     {
-        reset($this->relations);
+        reset($this->actions);
     }
 
     /**
@@ -80,6 +80,6 @@ class RelationCollection implements \Iterator, \Countable
      */
     public function count(): int
     {
-        return count($this->relations);
+        return count($this->actions);
     }
 }
