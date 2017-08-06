@@ -4,7 +4,8 @@ build:
             version: 7.1
 
 checks:
-    php: true
+    php:
+        code_rating: true
 
 filter:
     excluded_paths:
