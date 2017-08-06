@@ -21,6 +21,7 @@ use FiveLab\Component\Resource\Serializer\SerializerInterface;
 use FiveLab\Component\Resource\Serializers\Hateoas\Normalizer\PaginatedCollectionObjectNormalizer;
 use FiveLab\Component\Resource\Serializers\Hateoas\Normalizer\RelationCollectionObjectNormalizer;
 use FiveLab\Component\Resource\Serializers\Hateoas\Normalizer\RelationObjectNormalizer;
+use FiveLab\Component\Resource\Serializers\Hateoas\Normalizer\ResourceCollectionObjectNormalizer;
 
 /**
  * Hateoas serializer.
@@ -61,9 +62,10 @@ class HateoasSerializer implements ResourceSerializerInterface
                 return $this->fixRelations($data);
             },
             'normalizers'         => [
+                new RelationObjectNormalizer(),
                 new PaginatedCollectionObjectNormalizer(),
                 new RelationCollectionObjectNormalizer(),
-                new RelationObjectNormalizer(),
+                new ResourceCollectionObjectNormalizer(),
             ],
         ];
 

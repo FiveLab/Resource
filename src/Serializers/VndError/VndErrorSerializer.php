@@ -71,6 +71,8 @@ class VndErrorSerializer implements ResourceSerializerInterface
 
     /**
      * {@inheritdoc}
+     *
+     * @throws DeserializationNotSupportException
      */
     public function deserialize(
         string $data,
