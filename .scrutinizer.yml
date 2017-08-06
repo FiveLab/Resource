@@ -3,6 +3,14 @@ build:
         php:
             version: 7.1
 
+    tests:
+        override:
+            -
+                command: 'bin/phpunit --coverage-clover=phpunit-coverage'
+                coverage:
+                    file: 'phpunit-coverage'
+                    format: 'clover'
+
 checks:
     php:
         code_rating: true
