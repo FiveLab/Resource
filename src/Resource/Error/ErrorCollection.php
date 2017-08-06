@@ -21,9 +21,9 @@ namespace FiveLab\Component\Resource\Resource\Error;
 class ErrorCollection extends ErrorResource implements \Iterator, \Countable
 {
     /**
-     * @var ErrorResourceInterface[]
+     * @var array|ErrorResourceInterface[]
      */
-    private $errors;
+    private $errors = [];
 
     /**
      * Add errors to collection
@@ -32,10 +32,6 @@ class ErrorCollection extends ErrorResource implements \Iterator, \Countable
      */
     public function addErrors(ErrorResourceInterface ...$errors): void
     {
-        if (!$this->errors) {
-            $this->errors = [];
-        }
-
         $this->errors = array_merge($this->errors, $errors);
     }
 
