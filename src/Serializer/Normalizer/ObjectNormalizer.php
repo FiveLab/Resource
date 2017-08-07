@@ -96,7 +96,7 @@ class ObjectNormalizer extends SymfonyObjectNormalizer
 
             $data = $afterNormalization($data, $object, $format, $context);
 
-            if (!$data || !is_array($data)) {
+            if (!is_array($data)) {
                 throw new \LogicException(sprintf(
                     'The after normalization callback should return array, but "%s" given.',
                     is_object($data) ? get_class($data) : gettype($data)
