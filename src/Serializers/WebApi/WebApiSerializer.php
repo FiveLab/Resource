@@ -81,7 +81,7 @@ class WebApiSerializer implements ResourceSerializerInterface
      */
     protected function removeRelations(array $data): array
     {
-        unset($data['relations']);
+        unset($data['relations'], $data['actions']);
 
         return $data;
     }
