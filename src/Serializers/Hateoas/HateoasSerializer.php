@@ -22,6 +22,7 @@ use FiveLab\Component\Resource\Serializers\Hateoas\Normalizer\PaginatedCollectio
 use FiveLab\Component\Resource\Serializers\Hateoas\Normalizer\RelationCollectionObjectNormalizer;
 use FiveLab\Component\Resource\Serializers\Hateoas\Normalizer\RelationObjectNormalizer;
 use FiveLab\Component\Resource\Serializers\Hateoas\Normalizer\ResourceCollectionObjectNormalizer;
+use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
 /**
  * Hateoas serializer.
@@ -41,15 +42,22 @@ class HateoasSerializer implements ResourceSerializerInterface
     private $format;
 
     /**
+     * @var array|NormalizerInterface[]
+     */
+    private $normalizers;
+
+    /**
      * Constructor.
      *
      * @param SerializerInterface $serializer
+     * @param array               $normalizers
      * @param string              $format
      */
-    public function __construct(SerializerInterface $serializer, string $format)
+    public function __construct(SerializerInterface $serializer, array $normalizers, string $format)
     {
         $this->serializer = $serializer;
         $this->format = $format;
+        $this->normalizers = $normalizers;
     }
 
     /**
@@ -61,12 +69,7 @@ class HateoasSerializer implements ResourceSerializerInterface
             'after_normalization' => function (array $data) {
                 return $this->fixRelations($data);
             },
-            'normalizers'         => [
-                new RelationObjectNormalizer(),
-                new PaginatedCollectionObjectNormalizer(),
-                new RelationCollectionObjectNormalizer(),
-                new ResourceCollectionObjectNormalizer(),
-            ],
+            'normalizers'         => $this->normalizers,
         ];
 
         return $this->serializer->serialize($resource, $this->format, $innerContext);
@@ -92,7 +95,7 @@ class HateoasSerializer implements ResourceSerializerInterface
      *
      * @return array
      */
-    public function fixRelations(array $data): array
+    protected function fixRelations(array $data): array
     {
         $links = [];
 

@@ -41,15 +41,22 @@ class VndErrorSerializer implements ResourceSerializerInterface
     private $format;
 
     /**
+     * @var array
+     */
+    private $normalizers;
+
+    /**
      * Constructor.
      *
      * @param SerializerInterface $serializer
+     * @param array               $normalizers
      * @param string              $format
      */
-    public function __construct(SerializerInterface $serializer, string $format)
+    public function __construct(SerializerInterface $serializer, array $normalizers, string $format)
     {
         $this->serializer = $serializer;
         $this->format = $format;
+        $this->normalizers = $normalizers;
     }
 
     /**
@@ -58,12 +65,7 @@ class VndErrorSerializer implements ResourceSerializerInterface
     public function serialize(ResourceInterface $resource, ResourceSerializationContext $context): string
     {
         $innerContext = [
-            'normalizers' => [
-                new ErrorResourceObjectNormalizer(),
-                new ErrorCollectionObjectNormalizer(),
-                new RelationObjectNormalizer(),
-                new RelationCollectionObjectNormalizer(),
-            ],
+            'normalizers' => $this->normalizers,
         ];
 
         return $this->serializer->serialize($resource, $this->format, $innerContext);

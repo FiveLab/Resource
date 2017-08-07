@@ -14,12 +14,9 @@ namespace FiveLab\Component\Resource\Tests\Serializers\VndError;
 use FiveLab\Component\Resource\Resource\ResourceInterface;
 use FiveLab\Component\Resource\Serializer\Context\ResourceSerializationContext;
 use FiveLab\Component\Resource\Serializer\SerializerInterface;
-use FiveLab\Component\Resource\Serializers\Hateoas\Normalizer\RelationCollectionObjectNormalizer;
-use FiveLab\Component\Resource\Serializers\Hateoas\Normalizer\RelationObjectNormalizer;
-use FiveLab\Component\Resource\Serializers\VndError\Normalizer\ErrorCollectionObjectNormalizer;
-use FiveLab\Component\Resource\Serializers\VndError\Normalizer\ErrorResourceObjectNormalizer;
 use FiveLab\Component\Resource\Serializers\VndError\VndErrorSerializer;
 use PHPUnit\Framework\TestCase;
+use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
 /**
  * @author Vitaliy Zhuk <v.zhuk@fivelab.org>
@@ -32,6 +29,11 @@ class VndErrorSerializerTest extends TestCase
     private $serializer;
 
     /**
+     * @var array|NormalizerInterface[]
+     */
+    private $normalizers;
+
+    /**
      * @var VndErrorSerializer
      */
     private $vndErrorSerializer;
@@ -42,7 +44,8 @@ class VndErrorSerializerTest extends TestCase
     protected function setUp(): void
     {
         $this->serializer = $this->createMock(SerializerInterface::class);
-        $this->vndErrorSerializer = new VndErrorSerializer($this->serializer, 'json');
+        $this->normalizers = [$this->createMock(NormalizerInterface::class)];
+        $this->vndErrorSerializer = new VndErrorSerializer($this->serializer, $this->normalizers, 'json');
     }
 
     /**
@@ -55,12 +58,7 @@ class VndErrorSerializerTest extends TestCase
         $this->serializer->expects(self::once())
             ->method('serialize')
             ->with($resource, 'json', [
-                'normalizers' => [
-                    new ErrorResourceObjectNormalizer(),
-                    new ErrorCollectionObjectNormalizer(),
-                    new RelationObjectNormalizer(),
-                    new RelationCollectionObjectNormalizer(),
-                ],
+                'normalizers' => $this->normalizers,
             ])
             ->willReturn('some-serialized');
 

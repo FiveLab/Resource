@@ -15,11 +15,8 @@ use FiveLab\Component\Resource\Resource\ResourceInterface;
 use FiveLab\Component\Resource\Serializer\Context\ResourceSerializationContext;
 use FiveLab\Component\Resource\Serializer\SerializerInterface;
 use FiveLab\Component\Resource\Serializers\Hateoas\HateoasSerializer;
-use FiveLab\Component\Resource\Serializers\Hateoas\Normalizer\PaginatedCollectionObjectNormalizer;
-use FiveLab\Component\Resource\Serializers\Hateoas\Normalizer\RelationCollectionObjectNormalizer;
-use FiveLab\Component\Resource\Serializers\Hateoas\Normalizer\RelationObjectNormalizer;
-use FiveLab\Component\Resource\Serializers\Hateoas\Normalizer\ResourceCollectionObjectNormalizer;
 use PHPUnit\Framework\TestCase;
+use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
 /**
  * @author Vitaliy Zhuk <v.zhuk@fivelab.org>
@@ -32,6 +29,11 @@ class HateoasSerializerTest extends TestCase
     private $serializer;
 
     /**
+     * @var array|NormalizerInterface[]
+     */
+    private $normalizers;
+
+    /**
      * @var HateoasSerializer
      */
     private $hateoasSerializer;
@@ -42,7 +44,8 @@ class HateoasSerializerTest extends TestCase
     protected function setUp(): void
     {
         $this->serializer = $this->createMock(SerializerInterface::class);
-        $this->hateoasSerializer = new HateoasSerializer($this->serializer, 'json');
+        $this->normalizers = [$this->createMock(NormalizerInterface::class)];
+        $this->hateoasSerializer = new HateoasSerializer($this->serializer, $this->normalizers, 'json');
     }
 
     /**
@@ -59,12 +62,7 @@ class HateoasSerializerTest extends TestCase
                 self::assertArrayHasKey('after_normalization', $context);
                 self::assertArrayHasKey('normalizers', $context);
 
-                self::assertEquals([
-                    new RelationObjectNormalizer(),
-                    new PaginatedCollectionObjectNormalizer(),
-                    new RelationCollectionObjectNormalizer(),
-                    new ResourceCollectionObjectNormalizer(),
-                ], $context['normalizers']);
+                self::assertEquals($this->normalizers, $context['normalizers']);
 
                 return true;
             }))
