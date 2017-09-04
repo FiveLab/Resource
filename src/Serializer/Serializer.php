@@ -68,7 +68,7 @@ class Serializer extends SymfonySerializer implements SerializerInterface
         if (array_key_exists('normalizers', $context)) {
             $countNormalizers = count($context['normalizers']);
             /** @var NormalizerInterface[] $normalizers */
-            $normalizers = $context['normalizers'];
+            $normalizers = array_reverse($context['normalizers']);
 
             foreach ($normalizers as $normalizer) {
                 $this->prepareNormalizer($normalizer);
