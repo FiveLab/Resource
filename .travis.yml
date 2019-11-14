@@ -2,6 +2,8 @@ language: php
 
 php:
     - 7.1
+    - 7.2
+    - 7.3
 
 before_script:
     # Install composer
@@ -18,4 +20,3 @@ script:
     # Test on lowest versions
     - php composer.phar update --prefer-lowest
     - ./bin/phpunit
-
