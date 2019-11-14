@@ -6,9 +6,16 @@ php:
 before_script:
     # Install composer
     - wget http://getcomposer.org/composer.phar
-    - php composer.phar install
+    - php composer.phar install --prefer-stable
 
 script:
     - ./bin/phpmetrics src
     - ./bin/phpcs --standard=vendor/escapestudios/symfony2-coding-standard/Symfony2/ src/ tests/
+
+    # Test on stable versions
     - ./bin/phpunit
+
+    # Test on lowest versions
+    - php composer.phar update --prefer-lowest
+    - ./bin/phpunit
+
