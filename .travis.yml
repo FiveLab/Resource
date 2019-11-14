@@ -8,7 +8,7 @@ php:
 before_script:
     # Install composer
     - wget http://getcomposer.org/composer.phar
-    - php composer.phar install --prefer-stable
+    - php composer.phar update --prefer-stable
 
 script:
     - ./bin/phpmetrics src
