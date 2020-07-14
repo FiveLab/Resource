@@ -37,29 +37,29 @@ class ResourceCollectionObjectNormalizer implements NormalizerInterface, Normali
     public function normalize($object, $format = null, array $context = [])
     {
         if (!$object instanceof ResourceCollection) {
-            throw new \InvalidArgumentException(sprintf(
+            throw new \InvalidArgumentException(\sprintf(
                 'The normalizer support only "%s" but "%s" given.',
                 ResourceCollection::class,
-                is_object($object) ? get_class($object) : gettype($object)
+                \is_object($object) ? \get_class($object) : \gettype($object)
             ));
         }
 
         $data = [];
         $links = [];
 
-        if (count($object->getRelations())) {
-            $links = array_merge($links, $this->normalizer->normalize($object->getRelations(), $format, $context));
+        if (\count($object->getRelations())) {
+            $links = \array_merge($links, $this->normalizer->normalize($object->getRelations(), $format, $context));
         }
 
-        if (count($object->getActions())) {
-            $links = array_merge($links, $this->normalizer->normalize($object->getActions(), $format, $context));
+        if (\count($object->getActions())) {
+            $links = \array_merge($links, $this->normalizer->normalize($object->getActions(), $format, $context));
         }
 
         foreach ($object as $resource) {
             $data[] = $this->normalizer->normalize($resource, $format, $context);
         }
 
-        if (count($links)) {
+        if (\count($links)) {
             return [
                 '_links' => $links,
                 '_embedded' => [
@@ -76,6 +76,6 @@ class ResourceCollectionObjectNormalizer implements NormalizerInterface, Normali
      */
     public function supportsNormalization($data, $format = null): bool
     {
-        return is_object($data) && $data instanceof ResourceCollection;
+        return \is_object($data) && $data instanceof ResourceCollection;
     }
 }

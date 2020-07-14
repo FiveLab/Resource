@@ -18,7 +18,7 @@ namespace FiveLab\Component\Resource\Resource\Error;
  *
  * @author Vitaliy Zhuk <v.zhuk@fivelab.org>
  */
-class ErrorCollection extends ErrorResource implements \Iterator, \Countable
+class ErrorCollection extends ErrorResource implements \IteratorAggregate, \Countable
 {
     /**
      * @var array|ErrorResourceInterface[]
@@ -28,7 +28,7 @@ class ErrorCollection extends ErrorResource implements \Iterator, \Countable
     /**
      * Add errors to collection
      *
-     * @param ErrorResourceInterface[] ...$errors
+     * @param ErrorResourceInterface ...$errors
      */
     public function addErrors(ErrorResourceInterface ...$errors): void
     {
@@ -37,42 +37,12 @@ class ErrorCollection extends ErrorResource implements \Iterator, \Countable
 
     /**
      * {@inheritdoc}
+     *
+     * @return \ArrayIterator|ErrorResourceInterface[]
      */
-    public function current(): ErrorResourceInterface
+    public function getIterator(): \ArrayIterator
     {
-        return current($this->errors);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function next(): void
-    {
-        next($this->errors);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function key()
-    {
-        return key($this->errors);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function valid(): bool
-    {
-        return key($this->errors) !== null;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function rewind(): void
-    {
-        reset($this->errors);
+        return new \ArrayIterator($this->errors);
     }
 
     /**
@@ -80,6 +50,6 @@ class ErrorCollection extends ErrorResource implements \Iterator, \Countable
      */
     public function count(): int
     {
-        return count($this->errors);
+        return \count($this->errors);
     }
 }

@@ -33,10 +33,8 @@ class ResourceSerializerResolver implements ResourceSerializerResolverInterface
      * @param ResourceSerializerSupportableInterface $supportable
      * @param ResourceSerializerInterface            $serializer
      */
-    public function add(
-        ResourceSerializerSupportableInterface $supportable,
-        ResourceSerializerInterface $serializer
-    ): void {
+    public function add(ResourceSerializerSupportableInterface $supportable, ResourceSerializerInterface $serializer): void
+    {
         $this->map[] = [$supportable, $serializer];
     }
 
@@ -52,7 +50,7 @@ class ResourceSerializerResolver implements ResourceSerializerResolverInterface
             }
         }
 
-        throw new ResourceSerializerNotFoundException(sprintf(
+        throw new ResourceSerializerNotFoundException(\sprintf(
             'Not found serializer for resource for media type "%s".',
             $mediaType
         ));
@@ -61,11 +59,8 @@ class ResourceSerializerResolver implements ResourceSerializerResolverInterface
     /**
      * {@inheritdoc}
      */
-    public function resolveByMediaTypes(
-        string $resourceClass,
-        array $mediaTypes,
-        &$acceptMediaType
-    ): ResourceSerializerInterface {
+    public function resolveByMediaTypes(string $resourceClass, array $mediaTypes, &$acceptMediaType): ResourceSerializerInterface
+    {
         $serializer = null;
 
         foreach ($mediaTypes as $mediaType) {
@@ -80,9 +75,9 @@ class ResourceSerializerResolver implements ResourceSerializerResolverInterface
         }
 
         if (!$serializer) {
-            throw new ResourceSerializerNotFoundException(sprintf(
+            throw new ResourceSerializerNotFoundException(\sprintf(
                 'Can\'t resolve resource serializer for any media types: "%s".',
-                implode('", "', $mediaTypes)
+                \implode('", "', $mediaTypes)
             ));
         }
 

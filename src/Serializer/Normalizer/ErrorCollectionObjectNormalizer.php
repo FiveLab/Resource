@@ -64,12 +64,8 @@ class ErrorCollectionObjectNormalizer implements NormalizerInterface, Normalizer
      *
      * @return array
      */
-    public function appendCollectionAttributes(
-        array $data,
-        ErrorCollection $error,
-        string $format,
-        array $context
-    ): array {
+    public function appendCollectionAttributes(array $data, ErrorCollection $error, string $format, array $context): array
+    {
         $innerError = new ErrorResource(
             $error->getMessage(),
             $error->getReason(),
@@ -84,6 +80,6 @@ class ErrorCollectionObjectNormalizer implements NormalizerInterface, Normalizer
 
         $normalizedInnerError = $this->normalizer->normalize($innerError, $format, $context);
 
-        return array_merge($normalizedInnerError, $data);
+        return \array_merge($normalizedInnerError, $data);
     }
 }

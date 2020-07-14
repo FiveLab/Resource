@@ -21,10 +21,22 @@ class TestedClassForSerialization implements ResourceInterface
     /**
      * @var string
      */
-    public $fieldFoo = 'field1';
+    public $fieldFoo;
 
     /**
      * @var array
      */
-    public $fieldBar = ['field2'];
+    public $fieldBar;
+
+    /**
+     * Constructor.
+     *
+     * @param string         $fieldFoo
+     * @param array|string[] $fieldBar
+     */
+    public function __construct(string $fieldFoo = 'field1', array $fieldBar = ['field2'])
+    {
+        $this->fieldFoo = $fieldFoo;
+        $this->fieldBar = $fieldBar;
+    }
 }

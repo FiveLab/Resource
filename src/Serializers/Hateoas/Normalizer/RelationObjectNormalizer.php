@@ -32,11 +32,11 @@ class RelationObjectNormalizer implements NormalizerInterface
     public function normalize($object, $format = null, array $context = []): array
     {
         if (!$object instanceof RelationInterface && !$object instanceof ActionInterface) {
-            throw new \InvalidArgumentException(sprintf(
+            throw new \InvalidArgumentException(\sprintf(
                 'The normalizer support only "%s" or "%s" but "%s" given.',
                 RelationInterface::class,
                 ActionInterface::class,
-                is_object($object) ? get_class($object) : gettype($object)
+                \is_object($object) ? \get_class($object) : \gettype($object)
             ));
         }
 
@@ -60,6 +60,6 @@ class RelationObjectNormalizer implements NormalizerInterface
      */
     public function supportsNormalization($data, $format = null): bool
     {
-        return is_object($data) && ($data instanceof RelationInterface || $data instanceof ActionInterface);
+        return \is_object($data) && ($data instanceof RelationInterface || $data instanceof ActionInterface);
     }
 }

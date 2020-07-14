@@ -41,13 +41,8 @@ class ObjectNormalizer extends SymfonyObjectNormalizer
      * @param PropertyTypeExtractorInterface $propertyTypeExtractor
      * @param bool                           $serializeNull
      */
-    public function __construct(
-        ClassMetadataFactoryInterface $classMetadataFactory = null,
-        NameConverterInterface $nameConverter = null,
-        PropertyAccessorInterface $propertyAccessor = null,
-        PropertyTypeExtractorInterface $propertyTypeExtractor = null,
-        bool $serializeNull = true
-    ) {
+    public function __construct(ClassMetadataFactoryInterface $classMetadataFactory = null, NameConverterInterface $nameConverter = null, PropertyAccessorInterface $propertyAccessor = null, PropertyTypeExtractorInterface $propertyTypeExtractor = null, bool $serializeNull = true)
+    {
         parent::__construct($classMetadataFactory, $nameConverter, $propertyAccessor, $propertyTypeExtractor);
 
         $this->serializeNull = $serializeNull;
@@ -63,13 +58,13 @@ class ObjectNormalizer extends SymfonyObjectNormalizer
     public function normalize($object, $format = null, array $context = []): array
     {
         // Call to before normalization callback
-        if (array_key_exists('before_normalization', $context)) {
+        if (\array_key_exists('before_normalization', $context)) {
             $beforeNormalization = $context['before_normalization'];
 
-            if (!is_callable($beforeNormalization)) {
+            if (!\is_callable($beforeNormalization)) {
                 throw new \InvalidArgumentException(sprintf(
                     'Invalid callable for before normalization. "%s" given.',
-                    is_object($beforeNormalization) ? get_class($beforeNormalization) : gettype($beforeNormalization)
+                    \is_object($beforeNormalization) ? \get_class($beforeNormalization) : \gettype($beforeNormalization)
                 ));
             }
 
@@ -84,22 +79,22 @@ class ObjectNormalizer extends SymfonyObjectNormalizer
         }
 
         // Call to after normalization callback
-        if (array_key_exists('after_normalization', $context)) {
+        if (\array_key_exists('after_normalization', $context)) {
             $afterNormalization = $context['after_normalization'];
 
-            if (!is_callable($afterNormalization)) {
+            if (!\is_callable($afterNormalization)) {
                 throw new \InvalidArgumentException(sprintf(
                     'Invalid callable for after normalization. "%s" given.',
-                    is_object($afterNormalization) ? get_class($afterNormalization) : gettype($afterNormalization)
+                    \is_object($afterNormalization) ? \get_class($afterNormalization) : \gettype($afterNormalization)
                 ));
             }
 
             $data = $afterNormalization($data, $object, $format, $context);
 
-            if (!is_array($data)) {
+            if (!\is_array($data)) {
                 throw new \LogicException(sprintf(
                     'The after normalization callback should return array, but "%s" given.',
-                    is_object($data) ? get_class($data) : gettype($data)
+                    \is_object($data) ? \get_class($data) : \gettype($data)
                 ));
             }
         }
@@ -116,7 +111,7 @@ class ObjectNormalizer extends SymfonyObjectNormalizer
      */
     private function removeNullableAttributes(array $data): array
     {
-        return array_filter($data, function ($value) {
+        return \array_filter($data, static function ($value) {
             return (bool) $value;
         });
     }

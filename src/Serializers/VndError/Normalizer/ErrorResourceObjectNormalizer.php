@@ -32,7 +32,7 @@ class ErrorResourceObjectNormalizer implements NormalizerInterface, NormalizerAw
      */
     public function supportsNormalization($data, $format = null): bool
     {
-        return is_object($data) && $data instanceof ErrorResourceInterface;
+        return \is_object($data) && $data instanceof ErrorResourceInterface;
     }
 
     /**
@@ -44,12 +44,12 @@ class ErrorResourceObjectNormalizer implements NormalizerInterface, NormalizerAw
     {
         $links = [];
 
-        if (count($object->getRelations())) {
-            $links = array_merge($links, $this->normalizer->normalize($object->getRelations(), $format, $context));
+        if (\count($object->getRelations())) {
+            $links = \array_merge($links, $this->normalizer->normalize($object->getRelations(), $format, $context));
         }
 
-        if (count($object->getActions())) {
-            $links = array_merge($links, $this->normalizer->normalize($object->getActions(), $format, $context));
+        if (\count($object->getActions())) {
+            $links = \array_merge($links, $this->normalizer->normalize($object->getActions(), $format, $context));
         }
 
         $data = [
@@ -64,7 +64,7 @@ class ErrorResourceObjectNormalizer implements NormalizerInterface, NormalizerAw
             $data['logref'] = $object->getIdentifier();
         }
 
-        if (count($links)) {
+        if (\count($links)) {
             $data['_links'] = $links;
         }
 

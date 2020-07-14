@@ -80,11 +80,8 @@ class HateoasSerializer implements ResourceSerializerInterface
      *
      * @throws DeserializationNotSupportException
      */
-    public function deserialize(
-        string $data,
-        string $resourceClass,
-        ResourceSerializationContext $context
-    ): ResourceInterface {
+    public function deserialize(string $data, string $resourceClass, ResourceSerializationContext $context): ResourceInterface
+    {
         throw new DeserializationNotSupportException('The hateoas not support deserialization.');
     }
 
@@ -99,17 +96,17 @@ class HateoasSerializer implements ResourceSerializerInterface
     {
         $links = [];
 
-        if (array_key_exists('relations', $data)) {
-            $links = array_merge($links, $data['relations']);
+        if (\array_key_exists('relations', $data)) {
+            $links = \array_merge($links, $data['relations']);
             unset($data['relations']);
         }
 
-        if (array_key_exists('actions', $data)) {
-            $links = array_merge($links, $data['actions']);
+        if (\array_key_exists('actions', $data)) {
+            $links = \array_merge($links, $data['actions']);
             unset($data['actions']);
         }
 
-        if (count($links)) {
+        if (\count($links)) {
             $data['_links'] = $links;
         }
 

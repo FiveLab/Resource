@@ -54,7 +54,7 @@ class PaginatedCollectionObjectNormalizer implements NormalizerInterface, Normal
             'state'     => [
                 'page'   => $object->getPage(),
                 'limit'  => $object->getLimit(),
-                'pages'  => (int) (ceil($object->getTotal() / $object->getLimit())),
+                'pages'  => (int) (\ceil($object->getTotal() / $object->getLimit())),
                 'total'  => $object->getTotal(),
                 '_links' => $normalizedRelations,
             ],

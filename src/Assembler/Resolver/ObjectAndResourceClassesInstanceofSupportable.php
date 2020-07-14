@@ -47,7 +47,6 @@ class ObjectAndResourceClassesInstanceofSupportable implements ResourceAssembler
      */
     public function supports(string $objectClass, string $resourceClass): bool
     {
-        return is_a($objectClass, $this->objectClass, true)
-            && is_a($resourceClass, $this->resourceClass, true);
+        return \is_a($objectClass, $this->objectClass, true) && \is_a($resourceClass, $this->resourceClass, true);
     }
 }

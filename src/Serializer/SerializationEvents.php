@@ -23,14 +23,28 @@ final class SerializationEvents
     /**
      * Call to this event before normalize object to array
      *
-     * @see BeforeNormalizationEvent
+     * @see \FiveLab\Component\Resource\Serializer\Events\BeforeNormalizationEvent
      */
-    const BEFORE_NORMALIZATION = 'fivelab.serializer.normalization.before';
+    public const BEFORE_NORMALIZATION = 'fivelab.serializer.normalization.before';
 
     /**
      * Call to this event after success normalize object to array
      *
-     * @see AfterNormalizationEvent
+     * @see \FiveLab\Component\Resource\Serializer\Events\AfterNormalizationEvent
      */
-    const AFTER_NORMALIZATION = 'fivelab.serializer.normalization.after';
+    public const AFTER_NORMALIZATION = 'fivelab.serializer.normalization.after';
+
+    /**
+     * Call to this event before denormalize data to resource object
+     *
+     * @see \FiveLab\Component\Resource\Serializer\Events\BeforeDenormalizationEvent
+     */
+    public const BEFORE_DENORMALIZATION = 'fivelab.serializer.denormalization.before';
+
+    /**
+     * Call to this event  after denormalize data to resource object
+     *
+     * @see \FiveLab\Component\Resource\Serializer\Events\AfterDenormalizationEvent
+     */
+    public const AFTER_DENORMALIZATION = 'fivelab.serializer.denormalization.after';
 }

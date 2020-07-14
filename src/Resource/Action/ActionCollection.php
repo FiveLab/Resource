@@ -18,7 +18,7 @@ namespace FiveLab\Component\Resource\Resource\Action;
  *
  * @author Vitaliy Zhuk <v.zhuk@fivelab.org>
  */
-class ActionCollection implements \Iterator, \Countable
+class ActionCollection implements \IteratorAggregate, \Countable
 {
     /**
      * @var array
@@ -28,7 +28,7 @@ class ActionCollection implements \Iterator, \Countable
     /**
      * Constructor.
      *
-     * @param ActionInterface[] ...$actions
+     * @param ActionInterface ...$actions
      */
     public function __construct(ActionInterface ...$actions)
     {
@@ -37,42 +37,12 @@ class ActionCollection implements \Iterator, \Countable
 
     /**
      * {@inheritdoc}
+     *
+     * @return \ArrayIterator|ActionInterface[]
      */
-    public function current(): ActionInterface
+    public function getIterator(): \ArrayIterator
     {
-        return current($this->actions);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function next(): void
-    {
-        next($this->actions);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function key()
-    {
-        return key($this->actions);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function valid(): bool
-    {
-        return key($this->actions) !== null;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function rewind(): void
-    {
-        reset($this->actions);
+        return new \ArrayIterator($this->actions);
     }
 
     /**
@@ -80,6 +50,6 @@ class ActionCollection implements \Iterator, \Countable
      */
     public function count(): int
     {
-        return count($this->actions);
+        return \count($this->actions);
     }
 }

@@ -18,7 +18,7 @@ namespace FiveLab\Component\Resource\Resource;
  *
  * @author Vitaliy Zhuk <v.zhuk@fivelab.org>
  */
-class ResourceCollection extends AbstractResourceSupport implements \Iterator, \Countable
+class ResourceCollection extends AbstractResourceSupport implements \IteratorAggregate, \Countable
 {
     /**
      * @var ResourceInterface[]
@@ -28,7 +28,7 @@ class ResourceCollection extends AbstractResourceSupport implements \Iterator, \
     /**
      * Constructor.
      *
-     * @param ResourceInterface[] ...$resources
+     * @param ResourceInterface ...$resources
      */
     public function __construct(ResourceInterface ...$resources)
     {
@@ -39,42 +39,12 @@ class ResourceCollection extends AbstractResourceSupport implements \Iterator, \
 
     /**
      * {@inheritdoc}
+     *
+     * @return \ArrayIterator|ResourceInterface[]
      */
-    public function current()
+    public function getIterator(): \ArrayIterator
     {
-        return current($this->resources);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function next()
-    {
-        return next($this->resources);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function key()
-    {
-        return key($this->resources);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function valid(): bool
-    {
-        return key($this->resources) !== null;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function rewind(): void
-    {
-        reset($this->resources);
+        return new \ArrayIterator($this->resources);
     }
 
     /**
@@ -82,6 +52,6 @@ class ResourceCollection extends AbstractResourceSupport implements \Iterator, \
      */
     public function count(): int
     {
-        return count($this->resources);
+        return \count($this->resources);
     }
 }

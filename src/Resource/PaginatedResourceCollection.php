@@ -38,10 +38,10 @@ class PaginatedResourceCollection extends ResourceCollection
     /**
      * Constructor.
      *
-     * @param int                 $page
-     * @param int                 $limit
-     * @param int                 $total
-     * @param ResourceInterface[] ...$resources
+     * @param int               $page
+     * @param int               $limit
+     * @param int               $total
+     * @param ResourceInterface ...$resources
      */
     public function __construct(int $page, int $limit, int $total, ResourceInterface ...$resources)
     {

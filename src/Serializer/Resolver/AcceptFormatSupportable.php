@@ -54,13 +54,13 @@ class AcceptFormatSupportable implements ResourceSerializerSupportableInterface
      */
     public function supports(string $resourceClass, string $mediaType): bool
     {
-        if (!in_array($mediaType, $this->acceptedMediaTypes, true)) {
+        if (!\in_array($mediaType, $this->acceptedMediaTypes, true)) {
             return false;
         }
 
-        if (count($this->supportClasses)) {
+        if (\count($this->supportClasses)) {
             foreach ($this->supportClasses as $supportClass) {
-                if (is_a($resourceClass, $supportClass, true)) {
+                if (\is_a($resourceClass, $supportClass, true)) {
                     return true;
                 }
             }
@@ -69,7 +69,7 @@ class AcceptFormatSupportable implements ResourceSerializerSupportableInterface
         }
 
         foreach ($this->notSupportedClasses as $notSupportedClass) {
-            if (is_a($resourceClass, $notSupportedClass, true)) {
+            if (\is_a($resourceClass, $notSupportedClass, true)) {
                 return false;
             }
         }

@@ -33,8 +33,8 @@ Add Resource package in your composer.json:
 
 Now tell composer to download the library by running the command:
 
-```bash
-$ php composer.phar update fivelab/resource
+```shell script
+php composer.phar update fivelab/resource
 ```
 
 Documentation
@@ -51,6 +51,22 @@ This library is under the MIT license. See the complete license in library
 
 ```
 LICENSE
+```
+
+Development
+-----------
+
+For easy development you can use our `Dockerfile`:
+
+```shell script
+docker build -t fivelab-resource .
+docker run -it -v $(pwd):/code fivelab-resource bash
+```
+
+After run docker container, please install vendors:
+
+```shell script
+composer install
 ```
 
 Reporting an issue or a feature request

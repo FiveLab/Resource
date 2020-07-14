@@ -20,11 +20,11 @@ namespace FiveLab\Component\Resource\Resource\Action;
  */
 class Method
 {
-    const POST = 'POST';
-    const PUT = 'PUT';
-    const PATCH = 'PATCH';
-    const DELETE = 'DELETE';
-    const GET = 'GET';
+    public const POST   = 'POST';
+    public const PUT    = 'PUT';
+    public const PATCH  = 'PATCH';
+    public const DELETE = 'DELETE';
+    public const GET    = 'GET';
 
     /**
      * @var string
@@ -40,11 +40,11 @@ class Method
      */
     public function __construct(string $value)
     {
-        if (!in_array($value, self::getPossibleValues(), true)) {
-            throw new \InvalidArgumentException(sprintf(
+        if (!\in_array($value, self::getPossibleValues(), true)) {
+            throw new \InvalidArgumentException(\sprintf(
                 'Invalid method "%s". Available methods: "%s".',
                 $value,
-                implode('", "', self::getPossibleValues())
+                \implode('", "', self::getPossibleValues())
             ));
         }
 

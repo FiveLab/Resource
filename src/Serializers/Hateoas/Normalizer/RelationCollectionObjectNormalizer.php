@@ -38,11 +38,11 @@ class RelationCollectionObjectNormalizer implements NormalizerInterface, Normali
     public function normalize($object, $format = null, array $context = []): array
     {
         if (!$object instanceof RelationCollection && !$object instanceof ActionCollection) {
-            throw new \InvalidArgumentException(sprintf(
+            throw new \InvalidArgumentException(\sprintf(
                 'The normalizer support only "%s" or "%s" but "%s" given.',
                 RelationCollection::class,
                 ActionCollection::class,
-                is_object($object) ? get_class($object) : gettype($object)
+                \is_object($object) ? \get_class($object) : \gettype($object)
             ));
         }
 
@@ -60,6 +60,6 @@ class RelationCollectionObjectNormalizer implements NormalizerInterface, Normali
      */
     public function supportsNormalization($data, $format = null): bool
     {
-        return is_object($data) && ($data instanceof RelationCollection || $data instanceof ActionCollection);
+        return \is_object($data) && ($data instanceof RelationCollection || $data instanceof ActionCollection);
     }
 }

@@ -11,7 +11,9 @@
 
 namespace FiveLab\Component\Resource\Tests\Serializer;
 
+use FiveLab\Component\Resource\Serializer\Events\AfterDenormalizationEvent;
 use FiveLab\Component\Resource\Serializer\Events\AfterNormalizationEvent;
+use FiveLab\Component\Resource\Serializer\Events\BeforeDenormalizationEvent;
 use FiveLab\Component\Resource\Serializer\Events\BeforeNormalizationEvent;
 use FiveLab\Component\Resource\Serializer\Normalizer\ObjectNormalizer;
 use FiveLab\Component\Resource\Serializer\Serializer;
@@ -71,33 +73,39 @@ class SerializerTest extends TestCase
      */
     public function shouldSuccessSerializeWithCustomNormalizer(): void
     {
-        $called = false;
+        $calledToNormalizer = false;
+        $calledToDenormalizer = false;
 
         $context = [
             'normalizers' => [
-                new CustomNormalizer(function () use (&$called) {
-                    $called = true;
+                new CustomNormalizer(static function () use (&$calledToNormalizer) {
+                    $calledToNormalizer = true;
+                }),
+
+                new CustomDenormalizer(static function () use (&$calledToDenormalizer) {
+                    $calledToDenormalizer = true;
                 }),
             ],
         ];
 
         $data = $this->serializer->serialize(new TestedClassForSerialization(), 'json', $context);
 
-        self::assertTrue($called, 'The custom normalizer not called.');
+        self::assertTrue($calledToNormalizer, 'The custom normalizer not called.');
+        self::assertFalse($calledToDenormalizer, 'Can\'t called to denormalized.');
         self::assertEquals('["custom data"]', $data);
     }
 
     /**
      * @test
-     *
-     * @expectedException \RuntimeException
-     * @expectedExceptionMessage some foo bar
      */
-    public function shouldSuccessCleanNormalizersAfterCatchException(): void
+    public function shouldSuccessCleanNormalizersAfterCatchExceptionOnNormalization(): void
     {
+        $this->expectException(\RuntimeException::class);
+        $this->expectExceptionMessage('some foo bar');
+
         $context = [
             'normalizers' => [
-                new CustomNormalizer(function () {
+                new CustomNormalizer(static function () {
                     throw new \RuntimeException('some foo bar');
                 }),
             ],
@@ -121,7 +129,7 @@ class SerializerTest extends TestCase
     /**
      * @test
      */
-    public function shouldSuccessDispatchEvents(): void
+    public function shouldSuccessDispatchEventsOnNormalization(): void
     {
         $resource = new TestedClassForSerialization();
 
@@ -140,5 +148,95 @@ class SerializerTest extends TestCase
             );
 
         $this->serializer->serialize($resource, 'json', []);
+    }
+
+    /**
+     * @test
+     */
+    public function shouldSuccessDeserializeWithoutCustomDenormalizer(): void
+    {
+        $data = $this->serializer->deserialize('{"fieldFoo":"foo","fieldBar":["bar"]}', TestedClassForSerialization::class, 'json', []);
+
+        self::assertEquals(new TestedClassForSerialization('foo', ['bar']), $data);
+    }
+
+    /**
+     * @test
+     */
+    public function shouldSuccessDeserializeWithCustomDenormalizer(): void
+    {
+        $calledToNormalizer = false;
+        $calledToDenormalizer = false;
+
+        $context = [
+            'normalizers' => [
+                new CustomNormalizer(static function () use (&$calledToNormalizer) {
+                    $calledToNormalizer = true;
+                }),
+
+                new CustomDenormalizer(static function () use (&$calledToDenormalizer) {
+                    $calledToDenormalizer = true;
+                }),
+            ],
+        ];
+
+        $data = $this->serializer->deserialize('{"fieldFoo":"foo","fieldBar":["bar"]}', TestedClassForSerialization::class, 'json', $context);
+
+        self::assertFalse($calledToNormalizer, 'Can\'t called to normalized.');
+        self::assertTrue($calledToDenormalizer, 'The custom denormalizer not called.');
+        self::assertEquals(new TestedClassForSerialization('denormalized', ['denormalized']), $data);
+    }
+
+    /**
+     * @test
+     */
+    public function shouldSuccessCleanNormalizersAfterCatchExceptionOnDenormalization(): void
+    {
+        $this->expectException(\RuntimeException::class);
+        $this->expectExceptionMessage('some foo bar');
+
+        $context = [
+            'normalizers' => [
+                new CustomDenormalizer(static function () {
+                    throw new \RuntimeException('some foo bar');
+                }),
+            ],
+        ];
+
+        try {
+            $this->serializer->deserialize('{}', TestedClassForSerialization::class, 'json', $context);
+        } catch (\RuntimeException $e) {
+            $normalizersRef = new \ReflectionProperty($this->serializer, 'normalizers');
+            $normalizersRef->setAccessible(true);
+            $normalizers = $normalizersRef->getValue($this->serializer);
+
+            self::assertEquals([$this->objectNormalizer], $normalizers);
+
+            throw $e;
+        }
+
+        self::fail('Should throw exception.');
+    }
+
+    /**
+     * @test
+     */
+    public function shouldSuccessDispatchEventsOnDenormalization(): void
+    {
+        $this->eventDispatcher->expects(self::at(0))
+            ->method('dispatch')
+            ->with(
+                'fivelab.serializer.denormalization.before',
+                new BeforeDenormalizationEvent(['fieldFoo' => 'foo', 'fieldBar' => []], TestedClassForSerialization::class, 'json', [])
+            );
+
+        $this->eventDispatcher->expects(self::at(1))
+            ->method('dispatch')
+            ->with(
+                'fivelab.serializer.denormalization.after',
+                new AfterDenormalizationEvent(['fieldFoo' => 'foo', 'fieldBar' => []], new TestedClassForSerialization('foo', []), 'json', [])
+            );
+
+        $this->serializer->deserialize('{"fieldFoo": "foo", "fieldBar": []}', TestedClassForSerialization::class, 'json', []);
     }
 }

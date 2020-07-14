@@ -70,13 +70,8 @@ class ErrorResource extends AbstractResourceSupport implements ErrorResourceInte
      * @param array      $attributes
      * @param string|int $identifier
      */
-    public function __construct(
-        string $message,
-        $reason = null,
-        string $path = null,
-        array $attributes = [],
-        $identifier = null
-    ) {
+    public function __construct(string $message, $reason = null, string $path = null, array $attributes = [], $identifier = null)
+    {
         parent::__construct();
 
         $this->message = $message;

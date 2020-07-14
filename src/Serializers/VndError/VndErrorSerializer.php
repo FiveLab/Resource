@@ -76,11 +76,8 @@ class VndErrorSerializer implements ResourceSerializerInterface
      *
      * @throws DeserializationNotSupportException
      */
-    public function deserialize(
-        string $data,
-        string $resourceClass,
-        ResourceSerializationContext $context
-    ): ResourceInterface {
+    public function deserialize(string $data, string $resourceClass, ResourceSerializationContext $context): ResourceInterface
+    {
         throw new DeserializationNotSupportException('The Vnd.Error not support deserialization.');
     }
 }

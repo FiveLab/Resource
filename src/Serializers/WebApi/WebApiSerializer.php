@@ -64,11 +64,8 @@ class WebApiSerializer implements ResourceSerializerInterface
     /**
      * {@inheritdoc}
      */
-    public function deserialize(
-        string $data,
-        string $resourceClass,
-        ResourceSerializationContext $context
-    ): ResourceInterface {
+    public function deserialize(string $data, string $resourceClass, ResourceSerializationContext $context): ResourceInterface
+    {
         return $this->serializer->deserialize($data, $resourceClass, $this->format);
     }
 

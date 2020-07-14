@@ -33,7 +33,7 @@ class ErrorCollectionObjectNormalizer implements NormalizerInterface, Normalizer
      */
     public function supportsNormalization($data, $format = null): bool
     {
-        return is_object($data) && $data instanceof ErrorCollection;
+        return \is_object($data) && $data instanceof ErrorCollection;
     }
 
     /**
@@ -54,11 +54,11 @@ class ErrorCollectionObjectNormalizer implements NormalizerInterface, Normalizer
         $links = [];
 
         if (count($object->getRelations())) {
-            $links = array_merge($links, $this->normalizer->normalize($object->getRelations(), $format, $context));
+            $links = \array_merge($links, $this->normalizer->normalize($object->getRelations(), $format, $context));
         }
 
         if (count($object->getActions())) {
-            $links = array_merge($links, $this->normalizer->normalize($object->getActions(), $format, $context));
+            $links = \array_merge($links, $this->normalizer->normalize($object->getActions(), $format, $context));
         }
 
         if ($nested) {
@@ -72,7 +72,7 @@ class ErrorCollectionObjectNormalizer implements NormalizerInterface, Normalizer
 
             $data = $this->normalizer->normalize($innerError, $format, $context);
 
-            if (count($links)) {
+            if (\count($links)) {
                 $data['_links'] = $links;
             }
 
@@ -84,13 +84,13 @@ class ErrorCollectionObjectNormalizer implements NormalizerInterface, Normalizer
         }
 
         $data = [
-            'total' => count($errors),
+            'total' => \count($errors),
             '_embedded' => [
                 'errors' => $errors,
             ],
         ];
 
-        if (count($links)) {
+        if (\count($links)) {
             $data['_links'] = $links;
         }
 

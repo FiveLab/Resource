@@ -18,7 +18,7 @@ namespace FiveLab\Component\Resource\Resource\Relation;
  *
  * @author Vitaliy Zhuk <v.zhuk@fivelab.org>
  */
-class RelationCollection implements \Iterator, \Countable
+class RelationCollection implements \IteratorAggregate, \Countable
 {
     /**
      * @var array|RelationInterface[]
@@ -28,7 +28,7 @@ class RelationCollection implements \Iterator, \Countable
     /**
      * Constructor.
      *
-     * @param RelationInterface[] ...$relations
+     * @param RelationInterface ...$relations
      */
     public function __construct(RelationInterface ...$relations)
     {
@@ -37,42 +37,12 @@ class RelationCollection implements \Iterator, \Countable
 
     /**
      * {@inheritdoc}
+     *
+     * @return \ArrayIterator|RelationInterface[]
      */
-    public function current(): RelationInterface
+    public function getIterator(): \ArrayIterator
     {
-        return current($this->relations);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function next()
-    {
-        return next($this->relations);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function key()
-    {
-        return key($this->relations);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function valid(): bool
-    {
-        return key($this->relations) !== null;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function rewind(): void
-    {
-        reset($this->relations);
+        return new \ArrayIterator($this->relations);
     }
 
     /**
@@ -80,6 +50,6 @@ class RelationCollection implements \Iterator, \Countable
      */
     public function count(): int
     {
-        return count($this->relations);
+        return \count($this->relations);
     }
 }
