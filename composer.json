@@ -40,5 +40,12 @@
 
     "config": {
         "bin-dir": "./bin/"
+    },
+
+    "extra": {
+        "thanks": {
+            "name": "fivelab/resource",
+            "url": "https://github.com/FiveLab/Resource"
+        }
     }
 }
