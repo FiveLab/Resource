@@ -13,7 +13,7 @@ before_script:
 
 script:
     - ./bin/phpmetrics src
-    - ./bin/phpcs --standard=vendor/escapestudios/symfony2-coding-standard/Symfony2/ src/ tests/
+    - ./bin/phpcs --standard=vendor/escapestudios/symfony2-coding-standard/Symfony/ src/ tests/
 
     # Test on stable versions
     - ./bin/phpunit
