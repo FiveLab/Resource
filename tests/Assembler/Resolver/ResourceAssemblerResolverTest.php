@@ -11,6 +11,7 @@
 
 namespace FiveLab\Component\Resource\Tests\Assembler\Resolver;
 
+use FiveLab\Component\Resource\Assembler\Resolver\ResourceAssemblerNotFoundException;
 use FiveLab\Component\Resource\Assembler\Resolver\ResourceAssemblerResolver;
 use FiveLab\Component\Resource\Assembler\Resolver\ResourceAssemblerSupportableInterface;
 use FiveLab\Component\Resource\Assembler\ResourceAssemblerInterface;
@@ -65,11 +66,11 @@ class ResourceAssemblerResolverTest extends TestCase
 
     /**
      * @test
-     *
-     * @expectedException \FiveLab\Component\Resource\Assembler\Resolver\ResourceAssemblerNotFoundException
      */
     public function shouldThrowExceptionIfNotSupports(): void
     {
+        $this->expectException(ResourceAssemblerNotFoundException::class);
+
         $this->resolver->resolve(__CLASS__, \stdClass::class);
     }
 }

@@ -57,12 +57,12 @@ class ObjectNormalizerTest extends TestCase
 
     /**
      * @test
-     *
-     * @expectedException \InvalidArgumentException
-     * @expectedExceptionMessage Invalid callable for before normalization. "string" given.
      */
     public function shouldThrowExceptionIfBeforeNormalizationCallbackIsInvalid(): void
     {
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage('Invalid callable for before normalization. "string" given.');
+
         $context = ['before_normalization' => 'some'];
 
         $this->normalizer->normalize(new CustomObjectForNormalize(), 'xml', $context);
@@ -75,7 +75,7 @@ class ObjectNormalizerTest extends TestCase
     {
         $called = false;
 
-        $callable = function (array $data, CustomObjectForNormalize $object, $format, $context) use (&$called) {
+        $callable = static function (array $data, CustomObjectForNormalize $object, $format, $context) use (&$called) {
             $called = true;
             self::assertEquals(['fieldFoo' => 'value1', 'fieldBar' => ['value2']], $data);
 
@@ -94,13 +94,13 @@ class ObjectNormalizerTest extends TestCase
 
     /**
      * @test
-     *
-     * @expectedException \LogicException
-     * @expectedExceptionMessage The after normalization callback should return array, but "NULL" given.
      */
     public function shouldFailIfAfterNormalizationReturnNull(): void
     {
-        $callable = function () {
+        $this->expectException(\LogicException::class);
+        $this->expectExceptionMessage('The after normalization callback should return array, but "NULL" given.');
+
+        $callable = static function () {
         };
 
         $context = ['after_normalization' => $callable];
@@ -110,12 +110,12 @@ class ObjectNormalizerTest extends TestCase
 
     /**
      * @test
-     *
-     * @expectedException \InvalidArgumentException
-     * @expectedExceptionMessage Invalid callable for after normalization. "string" given.
      */
     public function shouldThrowExceptionIfAfterNormalizationCallbackIsInvalid(): void
     {
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage('Invalid callable for after normalization. "string" given.');
+
         $context = ['after_normalization' => 'some'];
 
         $this->normalizer->normalize(new CustomObjectForNormalize(), 'json', $context);

@@ -13,6 +13,7 @@ namespace FiveLab\Component\Resource\Tests\Serializers\Hateoas;
 
 use FiveLab\Component\Resource\Resource\ResourceInterface;
 use FiveLab\Component\Resource\Serializer\Context\ResourceSerializationContext;
+use FiveLab\Component\Resource\Serializer\Exception\DeserializationNotSupportException;
 use FiveLab\Component\Resource\Serializer\SerializerInterface;
 use FiveLab\Component\Resource\Serializers\Hateoas\HateoasSerializer;
 use PHPUnit\Framework\TestCase;
@@ -82,12 +83,12 @@ class HateoasSerializerTest extends TestCase
 
     /**
      * @test
-     *
-     * @expectedException \FiveLab\Component\Resource\Serializer\Exception\DeserializationNotSupportException
-     * @expectedExceptionMessage The hateoas not support deserialization.
      */
     public function shouldFailDeserialize(): void
     {
+        $this->expectException(DeserializationNotSupportException::class);
+        $this->expectExceptionMessage('The hateoas not support deserialization.');
+
         $this->hateoasSerializer->deserialize('some-data', 'MyClass', new ResourceSerializationContext([]));
     }
 }

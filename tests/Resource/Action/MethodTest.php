@@ -87,12 +87,12 @@ class MethodTest extends TestCase
 
     /**
      * @test
-     *
-     * @expectedException \InvalidArgumentException
-     * @expectedExceptionMessage Invalid method "SOME". Available methods: "POST", "PUT", "PATCH", "DELETE", "GET".
      */
     public function shouldThrowExceptionIfPassInvalidValue()
     {
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage('Invalid method "SOME". Available methods: "POST", "PUT", "PATCH", "DELETE", "GET".');
+
         new Method('SOME');
     }
 }

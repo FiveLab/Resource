@@ -13,6 +13,7 @@
 namespace FiveLab\Component\Resource\Tests\Serializer\Resolver;
 
 use FiveLab\Component\Resource\Resource\ResourceInterface;
+use FiveLab\Component\Resource\Serializer\Resolver\ResourceSerializerNotFoundException;
 use FiveLab\Component\Resource\Serializer\Resolver\ResourceSerializerResolver;
 use FiveLab\Component\Resource\Serializer\Resolver\ResourceSerializerSupportableInterface;
 use FiveLab\Component\Resource\Serializer\ResourceSerializerInterface;
@@ -103,23 +104,23 @@ class ResourceSerializerResolverTest extends TestCase
 
     /**
      * @test
-     *
-     * @expectedException \FiveLab\Component\Resource\Serializer\Resolver\ResourceSerializerNotFoundException
-     * @expectedExceptionMessage Not found serializer for resource for media type "application/xml".
      */
     public function shouldFailResolveByMediaTypeIfNotSupport(): void
     {
+        $this->expectException(ResourceSerializerNotFoundException::class);
+        $this->expectExceptionMessage('Not found serializer for resource for media type "application/xml".');
+
         $this->resolver->resolveByMediaType(ResourceInterface::class, 'application/xml');
     }
 
     /**
      * @test
-     *
-     * @expectedException \FiveLab\Component\Resource\Serializer\Resolver\ResourceSerializerNotFoundException
-     * @expectedExceptionMessage Can't resolve resource serializer for any media types: "application/xml", "application/hal+xml".
      */
     public function shouldFailResolveByMediaTypesIfNotSupport(): void
     {
+        $this->expectException(ResourceSerializerNotFoundException::class);
+        $this->expectExceptionMessage('Can\'t resolve resource serializer for any media types: "application/xml", "application/hal+xml".');
+
         $this->resolver->resolveByMediaTypes(ResourceInterface::class, ['application/xml', 'application/hal+xml'], $acceptFormat);
     }
 }

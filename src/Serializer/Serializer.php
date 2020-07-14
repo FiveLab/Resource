@@ -45,11 +45,8 @@ class Serializer extends SymfonySerializer implements SerializerInterface
      * @param array                    $encoders
      * @param EventDispatcherInterface $eventDispatcher
      */
-    public function __construct(
-        array $normalizers,
-        array $encoders,
-        EventDispatcherInterface $eventDispatcher
-    ) {
+    public function __construct(array $normalizers, array $encoders, EventDispatcherInterface $eventDispatcher)
+    {
         parent::__construct($normalizers, $encoders);
 
         $this->eventDispatcher = $eventDispatcher;

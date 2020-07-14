@@ -108,12 +108,12 @@ class RelationObjectNormalizerTest extends TestCase
 
     /**
      * @test
-     *
-     * @expectedException \InvalidArgumentException
-     * @expectedExceptionMessage The normalizer support only "FiveLab\Component\Resource\Resource\Relation\RelationInterface" or "FiveLab\Component\Resource\Resource\Action\ActionInterface" but "stdClass" given.
      */
     public function shouldFailNormalizeIfSendInvalidObject(): void
     {
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage('The normalizer support only "FiveLab\Component\Resource\Resource\Relation\RelationInterface" or "FiveLab\Component\Resource\Resource\Action\ActionInterface" but "stdClass" given.');
+
         $this->normalizer->normalize(new \stdClass(), 'json');
     }
 }

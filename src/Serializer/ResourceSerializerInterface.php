@@ -42,9 +42,5 @@ interface ResourceSerializerInterface
      *
      * @return ResourceInterface
      */
-    public function deserialize(
-        string $data,
-        string $resourceClass,
-        ResourceSerializationContext $context
-    ): ResourceInterface;
+    public function deserialize(string $data, string $resourceClass, ResourceSerializationContext $context): ResourceInterface;
 }

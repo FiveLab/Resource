@@ -126,12 +126,12 @@ class RelationCollectionObjectNormalizerTest extends TestCase
 
     /**
      * @test
-     *
-     * @expectedException \InvalidArgumentException
-     * @expectedExceptionMessage The normalizer support only "FiveLab\Component\Resource\Resource\Relation\RelationCollection" or "FiveLab\Component\Resource\Resource\Action\ActionCollection" but "stdClass" given.
      */
     public function shouldFailNormalizeIfSendInvalidObject(): void
     {
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage('The normalizer support only "FiveLab\Component\Resource\Resource\Relation\RelationCollection" or "FiveLab\Component\Resource\Resource\Action\ActionCollection" but "stdClass" given.');
+
         $this->normalizer->normalize(new \stdClass(), 'json');
     }
 }

@@ -45,9 +45,5 @@ interface ResourceSerializerResolverInterface
      *
      * @throws ResourceSerializerNotFoundException
      */
-    public function resolveByMediaTypes(
-        string $resourceClass,
-        array $mediaTypes,
-        &$acceptMediaType
-    ): ResourceSerializerInterface;
+    public function resolveByMediaTypes(string $resourceClass, array $mediaTypes, &$acceptMediaType): ResourceSerializerInterface;
 }

@@ -109,12 +109,12 @@ class ResourceCollectionObjectNormalizerTest extends TestCase
 
     /**
      * @test
-     *
-     * @expectedException \InvalidArgumentException
-     * @expectedExceptionMessage The normalizer support only "FiveLab\Component\Resource\Resource\ResourceCollection" but "stdClass" given.
      */
     public function shouldFailNormalizeIfSendInvalidObject(): void
     {
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage('The normalizer support only "FiveLab\Component\Resource\Resource\ResourceCollection" but "stdClass" given.');
+
         $this->collectionNormalizer->normalize(new \stdClass(), 'json');
     }
 

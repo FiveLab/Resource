@@ -13,6 +13,7 @@ namespace FiveLab\Component\Resource\Tests\Serializers\VndError;
 
 use FiveLab\Component\Resource\Resource\ResourceInterface;
 use FiveLab\Component\Resource\Serializer\Context\ResourceSerializationContext;
+use FiveLab\Component\Resource\Serializer\Exception\DeserializationNotSupportException;
 use FiveLab\Component\Resource\Serializer\SerializerInterface;
 use FiveLab\Component\Resource\Serializers\VndError\VndErrorSerializer;
 use PHPUnit\Framework\TestCase;
@@ -69,12 +70,12 @@ class VndErrorSerializerTest extends TestCase
 
     /**
      * @test
-     *
-     * @expectedException \FiveLab\Component\Resource\Serializer\Exception\DeserializationNotSupportException
-     * @expectedExceptionMessage The Vnd.Error not support deserialization.
      */
     public function shouldFailDeserialize(): void
     {
+        $this->expectException(DeserializationNotSupportException::class);
+        $this->expectExceptionMessage('The Vnd.Error not support deserialization.');
+
         $this->vndErrorSerializer->deserialize('some', ResourceInterface::class, new ResourceSerializationContext([]));
     }
 }

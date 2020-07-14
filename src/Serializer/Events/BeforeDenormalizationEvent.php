@@ -63,7 +63,7 @@ class BeforeDenormalizationEvent extends Event
      *
      * @return mixed
      */
-    public function geData()
+    public function getData()
     {
         return $this->data;
     }
