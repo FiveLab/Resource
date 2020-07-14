@@ -16,8 +16,6 @@ namespace FiveLab\Component\Resource\Resource;
 /**
  * Mark resource as normalizable.
  *
- * @note: you must register additional listener!
- *
  * @see \FiveLab\Component\Resource\Resource\EventListener\NormalizeNormalizableResourcesListener
  */
 interface NormalizableResourceInterface extends ResourceInterface
