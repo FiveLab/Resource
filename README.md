@@ -24,7 +24,7 @@ Add Resource package in your composer.json:
 ````json
 {
     "require": {
-        "fivelab/resource": "~1.0"
+        "fivelab/resource": "~2.0"
     }
 }
 ````
@@ -102,4 +102,3 @@ Contributors:
 -------------
 
 Thanks to [everyone participating](https://github.com/FiveLab/Resource/graphs/contributors) in the development of this Resource library!
-
