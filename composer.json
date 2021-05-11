@@ -31,6 +31,10 @@
         "phpstan/phpstan": "~0.12.85"
     },
 
+    "conflict": {
+        "symfony/serializer": "4.4.9"
+    },
+
     "autoload": {
         "psr-4": { "FiveLab\\Component\\Resource\\": "src/" }
     },
