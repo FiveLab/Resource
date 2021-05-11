@@ -17,13 +17,15 @@ namespace FiveLab\Component\Resource\Resource;
  * The collection for store resources.
  *
  * @author Vitaliy Zhuk <v.zhuk@fivelab.org>
+ *
+ * @implements \IteratorAggregate<ResourceInterface>
  */
 class ResourceCollection extends AbstractResourceSupport implements \IteratorAggregate, \Countable
 {
     /**
      * @var ResourceInterface[]
      */
-    private $resources;
+    private array $resources;
 
     /**
      * Constructor.
@@ -34,13 +36,13 @@ class ResourceCollection extends AbstractResourceSupport implements \IteratorAgg
     {
         parent::__construct();
 
-        $this->resources = func_get_args();
+        $this->resources = $resources;
     }
 
     /**
      * {@inheritdoc}
      *
-     * @return \ArrayIterator|ResourceInterface[]
+     * @return \ArrayIterator<ResourceInterface>
      */
     public function getIterator(): \ArrayIterator
     {

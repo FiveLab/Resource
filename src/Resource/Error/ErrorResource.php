@@ -28,14 +28,14 @@ class ErrorResource extends AbstractResourceSupport implements ErrorResourceInte
      * The identifier of error.
      * Can use for multiple errors for split errors.
      *
-     * @var string|int
+     * @var string|int|null
      */
     private $identifier;
 
     /**
      * The reason of error.
      *
-     * @var string|int
+     * @var string|int|null
      */
     private $reason;
 
@@ -44,31 +44,31 @@ class ErrorResource extends AbstractResourceSupport implements ErrorResourceInte
      *
      * @var string
      */
-    private $message;
+    private string $message;
 
     /**
      * The custom attributes for this error.
      *
      * @var array
      */
-    private $attributes;
+    private array $attributes;
 
     /**
      * The path of this error.
      * As an example: the name of invalid form field.
      *
-     * @var string
+     * @var string|null
      */
-    private $path;
+    private ?string $path;
 
     /**
      * Constructor.
      *
-     * @param string     $message
-     * @param string|int $reason
-     * @param string     $path
-     * @param array      $attributes
-     * @param string|int $identifier
+     * @param string      $message
+     * @param string|int  $reason
+     * @param string|null $path
+     * @param array       $attributes
+     * @param string|int  $identifier
      */
     public function __construct(string $message, $reason = null, string $path = null, array $attributes = [], $identifier = null)
     {

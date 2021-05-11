@@ -35,7 +35,7 @@ interface ErrorResourceInterface extends ResourceInterface, RelatedResourceInter
     /**
      * Get the reason of error.
      *
-     * @return int|string
+     * @return int|string|null
      */
     public function getReason();
 
@@ -49,7 +49,7 @@ interface ErrorResourceInterface extends ResourceInterface, RelatedResourceInter
     /**
      * Get the identifier of error.
      *
-     * @return int|string
+     * @return int|string|null
      */
     public function getIdentifier();
 

@@ -27,18 +27,18 @@ interface ResourceAssemblerInterface
     /**
      * Assembly resource from object
      *
-     * @param object          $entity
-     * @param AssembleContext $context
+     * @param object               $entity
+     * @param AssembleContext|null $context
      *
      * @return ResourceInterface
      */
-    public function toResource($entity, AssembleContext $context = null): ResourceInterface;
+    public function toResource(object $entity, AssembleContext $context = null): ResourceInterface;
 
     /**
      * Assembly resources from iterator
      *
-     * @param \Traversable    $entities
-     * @param AssembleContext $context
+     * @param \Traversable         $entities
+     * @param AssembleContext|null $context
      *
      * @return ResourceCollection|ResourceInterface[]
      */

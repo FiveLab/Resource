@@ -23,14 +23,14 @@ use FiveLab\Component\Resource\Resource\ResourceInterface;
 class Presentation implements PresentationInterface
 {
     /**
-     * @var ResourceInterface
+     * @var ResourceInterface|null
      */
-    private $resource;
+    private ?ResourceInterface $resource;
 
     /**
      * @var int
      */
-    private $statusCode;
+    private int $statusCode;
 
     /**
      * Constructor.

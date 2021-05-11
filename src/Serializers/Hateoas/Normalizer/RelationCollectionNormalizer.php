@@ -24,7 +24,7 @@ use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
  *
  * @author Vitaliy Zhuk <v.zhuk@fivelab.org>
  */
-class RelationCollectionObjectNormalizer implements NormalizerInterface, NormalizerAwareInterface
+class RelationCollectionNormalizer implements NormalizerInterface, NormalizerAwareInterface
 {
     use NormalizerAwareTrait;
 
@@ -37,15 +37,6 @@ class RelationCollectionObjectNormalizer implements NormalizerInterface, Normali
      */
     public function normalize($object, $format = null, array $context = []): array
     {
-        if (!$object instanceof RelationCollection && !$object instanceof ActionCollection) {
-            throw new \InvalidArgumentException(\sprintf(
-                'The normalizer support only "%s" or "%s" but "%s" given.',
-                RelationCollection::class,
-                ActionCollection::class,
-                \is_object($object) ? \get_class($object) : \gettype($object)
-            ));
-        }
-
         $data = [];
 
         foreach ($object as $relation) {

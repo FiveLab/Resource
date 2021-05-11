@@ -35,7 +35,7 @@ class ErrorPresentationFactory
      *
      * @return PresentationInterface
      */
-    public static function create(int $statusCode, string $message, $reason = null, string $path = null, array $attributes = [], $identifier = null): PresentationInterface
+    public static function create(int $statusCode, string $message, string $reason = null, string $path = null, array $attributes = [], $identifier = null): PresentationInterface
     {
         $error = new ErrorResource($message, $reason, $path, $attributes, $identifier);
 
@@ -45,15 +45,15 @@ class ErrorPresentationFactory
     /**
      * Create the bad request error presentation.
      *
-     * @param string     $message
-     * @param string     $reason
-     * @param string     $path
-     * @param array      $attributes
-     * @param string|int $identifier
+     * @param string      $message
+     * @param string|null $reason
+     * @param string|null $path
+     * @param array       $attributes
+     * @param string|int  $identifier
      *
      * @return PresentationInterface
      */
-    public static function badRequest(string $message, $reason = null, string $path = null, array $attributes = [], $identifier = null): PresentationInterface
+    public static function badRequest(string $message, string $reason = null, string $path = null, array $attributes = [], $identifier = null): PresentationInterface
     {
         $error = new ErrorResource($message, $reason, $path, $attributes, $identifier);
 
@@ -63,15 +63,15 @@ class ErrorPresentationFactory
     /**
      * Create the unauthorized error presentation.
      *
-     * @param string     $message
-     * @param string     $reason
-     * @param string     $path
-     * @param array      $attributes
-     * @param string|int $identifier
+     * @param string      $message
+     * @param string|null $reason
+     * @param string|null $path
+     * @param array       $attributes
+     * @param string|int  $identifier
      *
      * @return PresentationInterface
      */
-    public static function unauthorized(string $message, $reason = null, string $path = null, array $attributes = [], $identifier = null): PresentationInterface
+    public static function unauthorized(string $message, string $reason = null, string $path = null, array $attributes = [], $identifier = null): PresentationInterface
     {
         $error = new ErrorResource($message, $reason, $path, $attributes, $identifier);
 
@@ -81,15 +81,15 @@ class ErrorPresentationFactory
     /**
      * Create the forbidden error presentation.
      *
-     * @param string     $message
-     * @param string     $reason
-     * @param string     $path
-     * @param array      $attributes
-     * @param string|int $identifier
+     * @param string      $message
+     * @param string|null $reason
+     * @param string|null $path
+     * @param array       $attributes
+     * @param string|int  $identifier
      *
      * @return PresentationInterface
      */
-    public static function forbidden(string $message, $reason = null, string $path = null, array $attributes = [], $identifier = null): PresentationInterface
+    public static function forbidden(string $message, string $reason = null, string $path = null, array $attributes = [], $identifier = null): PresentationInterface
     {
         $error = new ErrorResource($message, $reason, $path, $attributes, $identifier);
 
@@ -99,15 +99,15 @@ class ErrorPresentationFactory
     /**
      * Create the not found error presentation.
      *
-     * @param string     $message
-     * @param string     $reason
-     * @param string     $path
-     * @param array      $attributes
-     * @param string|int $identifier
+     * @param string      $message
+     * @param string|null $reason
+     * @param string|null $path
+     * @param array       $attributes
+     * @param string|int  $identifier
      *
      * @return PresentationInterface
      */
-    public static function notFound(string $message, $reason = null, string $path = null, array $attributes = [], $identifier = null): PresentationInterface
+    public static function notFound(string $message, string $reason = null, string $path = null, array $attributes = [], $identifier = null): PresentationInterface
     {
         $error = new ErrorResource($message, $reason, $path, $attributes, $identifier);
 
@@ -117,15 +117,15 @@ class ErrorPresentationFactory
     /**
      * Create the conflict error presentation.
      *
-     * @param string     $message
-     * @param string     $reason
-     * @param string     $path
-     * @param array      $attributes
-     * @param string|int $identifier
+     * @param string      $message
+     * @param string|null $reason
+     * @param string|null $path
+     * @param array       $attributes
+     * @param string|int  $identifier
      *
      * @return PresentationInterface
      */
-    public static function conflict(string $message, $reason = null, string $path = null, array $attributes = [], $identifier = null): PresentationInterface
+    public static function conflict(string $message, string $reason = null, string $path = null, array $attributes = [], $identifier = null): PresentationInterface
     {
         $error = new ErrorResource($message, $reason, $path, $attributes, $identifier);
 
@@ -135,15 +135,15 @@ class ErrorPresentationFactory
     /**
      * Create the gone error presentation.
      *
-     * @param string     $message
-     * @param string     $reason
-     * @param string     $path
-     * @param array      $attributes
-     * @param string|int $identifier
+     * @param string      $message
+     * @param string|null $reason
+     * @param string|null $path
+     * @param array       $attributes
+     * @param string|int  $identifier
      *
      * @return PresentationInterface
      */
-    public static function gone(string $message, $reason = null, string $path = null, array $attributes = [], $identifier = null): PresentationInterface
+    public static function gone(string $message, string $reason = null, string $path = null, array $attributes = [], $identifier = null): PresentationInterface
     {
         $error = new ErrorResource($message, $reason, $path, $attributes, $identifier);
 
@@ -153,15 +153,15 @@ class ErrorPresentationFactory
     /**
      * Create the request entity to large error presentation.
      *
-     * @param string     $message
-     * @param string     $reason
-     * @param string     $path
-     * @param array      $attributes
-     * @param string|int $identifier
+     * @param string      $message
+     * @param string|null $reason
+     * @param string|null $path
+     * @param array       $attributes
+     * @param string|int  $identifier
      *
      * @return PresentationInterface
      */
-    public static function requestEntityToLarge(string $message, $reason = null, string $path = null, array $attributes = [], $identifier = null): PresentationInterface
+    public static function requestEntityToLarge(string $message, string $reason = null, string $path = null, array $attributes = [], $identifier = null): PresentationInterface
     {
         $error = new ErrorResource($message, $reason, $path, $attributes, $identifier);
 
@@ -171,15 +171,15 @@ class ErrorPresentationFactory
     /**
      * Create the unsupported media type error presentation.
      *
-     * @param string     $message
-     * @param string     $reason
-     * @param string     $path
-     * @param array      $attributes
-     * @param string|int $identifier
+     * @param string      $message
+     * @param string|null $reason
+     * @param string|null $path
+     * @param array       $attributes
+     * @param string|int  $identifier
      *
      * @return PresentationInterface
      */
-    public static function unsupportedMediaType(string $message, $reason = null, string $path = null, array $attributes = [], $identifier = null): PresentationInterface
+    public static function unsupportedMediaType(string $message, string $reason = null, string $path = null, array $attributes = [], $identifier = null): PresentationInterface
     {
         $error = new ErrorResource($message, $reason, $path, $attributes, $identifier);
 
@@ -189,15 +189,15 @@ class ErrorPresentationFactory
     /**
      * Create the internal server error presentation.
      *
-     * @param string     $message
-     * @param string     $reason
-     * @param string     $path
-     * @param array      $attributes
-     * @param string|int $identifier
+     * @param string      $message
+     * @param string|null $reason
+     * @param string|null $path
+     * @param array       $attributes
+     * @param string|int  $identifier
      *
      * @return PresentationInterface
      */
-    public static function internalServerError(string $message, $reason = null, string $path = null, array $attributes = [], $identifier = null): PresentationInterface
+    public static function internalServerError(string $message, string $reason = null, string $path = null, array $attributes = [], $identifier = null): PresentationInterface
     {
         $error = new ErrorResource($message, $reason, $path, $attributes, $identifier);
 

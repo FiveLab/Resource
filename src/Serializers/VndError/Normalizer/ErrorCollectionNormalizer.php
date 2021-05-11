@@ -24,7 +24,7 @@ use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
  *
  * @author Vitaliy Zhuk <v.zhuk@fivelab.org>
  */
-class ErrorCollectionObjectNormalizer implements NormalizerInterface, NormalizerAwareInterface
+class ErrorCollectionNormalizer implements NormalizerInterface, NormalizerAwareInterface
 {
     use NormalizerAwareTrait;
 
@@ -53,11 +53,13 @@ class ErrorCollectionObjectNormalizer implements NormalizerInterface, Normalizer
 
         $links = [];
 
-        if (count($object->getRelations())) {
+        if (\count($object->getRelations())) {
+            // @phpstan-ignore-next-line
             $links = \array_merge($links, $this->normalizer->normalize($object->getRelations(), $format, $context));
         }
 
-        if (count($object->getActions())) {
+        if (\count($object->getActions())) {
+            // @phpstan-ignore-next-line
             $links = \array_merge($links, $this->normalizer->normalize($object->getActions(), $format, $context));
         }
 
@@ -70,6 +72,7 @@ class ErrorCollectionObjectNormalizer implements NormalizerInterface, Normalizer
                 $object->getIdentifier()
             );
 
+            /** @var array $data */
             $data = $this->normalizer->normalize($innerError, $format, $context);
 
             if (\count($links)) {

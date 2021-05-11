@@ -16,7 +16,8 @@ namespace FiveLab\Component\Resource\Serializers\WebApi;
 use FiveLab\Component\Resource\Resource\ResourceInterface;
 use FiveLab\Component\Resource\Serializer\Context\ResourceSerializationContext;
 use FiveLab\Component\Resource\Serializer\ResourceSerializerInterface;
-use FiveLab\Component\Resource\Serializer\SerializerInterface;
+use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
+use Symfony\Component\Serializer\SerializerInterface;
 
 /**
  * Default Web API serializer.
@@ -28,23 +29,30 @@ class WebApiSerializer implements ResourceSerializerInterface
     /**
      * @var SerializerInterface
      */
-    private $serializer;
+    private SerializerInterface $serializer;
 
     /**
      * @var string
      */
-    private $format;
+    private string $format;
+
+    /**
+     * @var array<string, mixed>
+     */
+    private array $serializationContext;
 
     /**
      * Constructor.
      *
-     * @param SerializerInterface $serializer
-     * @param string              $format
+     * @param SerializerInterface  $serializer
+     * @param string               $format
+     * @param array<string, mixed> $serializationContext
      */
-    public function __construct(SerializerInterface $serializer, string $format)
+    public function __construct(SerializerInterface $serializer, string $format, array $serializationContext)
     {
         $this->serializer = $serializer;
         $this->format = $format;
+        $this->serializationContext = $serializationContext;
     }
 
     /**
@@ -52,13 +60,14 @@ class WebApiSerializer implements ResourceSerializerInterface
      */
     public function serialize(ResourceInterface $resource, ResourceSerializationContext $context): string
     {
-        $innerContext = [
-            'after_normalization' => function (array $data) {
-                return $this->removeRelations($data);
-            },
-        ];
+        $serializationContext = \array_merge($this->serializationContext, [
+            AbstractNormalizer::IGNORED_ATTRIBUTES => [
+                'relations',
+                'actions',
+            ],
+        ]);
 
-        return $this->serializer->serialize($resource, $this->format, $innerContext);
+        return $this->serializer->serialize($resource, $this->format, $serializationContext);
     }
 
     /**
@@ -67,19 +76,5 @@ class WebApiSerializer implements ResourceSerializerInterface
     public function deserialize(string $data, string $resourceClass, ResourceSerializationContext $context): ResourceInterface
     {
         return $this->serializer->deserialize($data, $resourceClass, $this->format);
-    }
-
-    /**
-     * Remove resources from data
-     *
-     * @param array $data
-     *
-     * @return array
-     */
-    protected function removeRelations(array $data): array
-    {
-        unset($data['relations'], $data['actions']);
-
-        return $data;
     }
 }

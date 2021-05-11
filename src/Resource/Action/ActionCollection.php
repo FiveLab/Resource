@@ -17,13 +17,15 @@ namespace FiveLab\Component\Resource\Resource\Action;
  * The collection for store resource actions.
  *
  * @author Vitaliy Zhuk <v.zhuk@fivelab.org>
+ *
+ * @implements \IteratorAggregate<ActionInterface>
  */
 class ActionCollection implements \IteratorAggregate, \Countable
 {
     /**
-     * @var array
+     * @var array<ActionInterface>
      */
-    private $actions;
+    private array $actions;
 
     /**
      * Constructor.
@@ -38,7 +40,7 @@ class ActionCollection implements \IteratorAggregate, \Countable
     /**
      * {@inheritdoc}
      *
-     * @return \ArrayIterator|ActionInterface[]
+     * @return \ArrayIterator<ActionInterface>
      */
     public function getIterator(): \ArrayIterator
     {

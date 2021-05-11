@@ -11,11 +11,21 @@
 
 namespace FiveLab\Component\Resource\Tests\Serializers\WebApi;
 
-use FiveLab\Component\Resource\Resource\ResourceInterface;
+use FiveLab\Component\Resource\Resource\Action\Action;
+use FiveLab\Component\Resource\Resource\Action\Method;
+use FiveLab\Component\Resource\Resource\Href\Href;
+use FiveLab\Component\Resource\Resource\PaginatedResourceCollection;
+use FiveLab\Component\Resource\Resource\Relation\Relation;
+use FiveLab\Component\Resource\Resource\ResourceCollection;
 use FiveLab\Component\Resource\Serializer\Context\ResourceSerializationContext;
-use FiveLab\Component\Resource\Serializer\SerializerInterface;
+use FiveLab\Component\Resource\Serializer\Serializer;
+use FiveLab\Component\Resource\Serializers\WebApi\Normalizer\PaginatedCollectionNormalizer;
 use FiveLab\Component\Resource\Serializers\WebApi\WebApiSerializer;
+use FiveLab\Component\Resource\Tests\Resources\AddressResource;
+use FiveLab\Component\Resource\Tests\Resources\CustomerResource;
 use PHPUnit\Framework\TestCase;
+use Symfony\Component\Serializer\Encoder\JsonEncoder;
+use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
 
 /**
  * @author Vitaliy Zhuk <v.zhuk@fivelab.org>
@@ -23,22 +33,22 @@ use PHPUnit\Framework\TestCase;
 class WebApiSerializerTest extends TestCase
 {
     /**
-     * @var SerializerInterface|\PHPUnit_Framework_MockObject_MockObject
-     */
-    private $serializer;
-
-    /**
      * @var WebApiSerializer
      */
-    private $webApiSerializer;
+    private WebApiSerializer $serializer;
 
     /**
      * {@inheritdoc}
      */
     protected function setUp(): void
     {
-        $this->serializer = $this->createMock(SerializerInterface::class);
-        $this->webApiSerializer = new WebApiSerializer($this->serializer, 'json');
+        $normalizers = [
+            new PaginatedCollectionNormalizer(),
+            new ObjectNormalizer(),
+        ];
+
+        $serializer = new Serializer($normalizers, [new JsonEncoder()]);
+        $this->serializer = new WebApiSerializer($serializer, 'json', []);
     }
 
     /**
@@ -46,27 +56,144 @@ class WebApiSerializerTest extends TestCase
      */
     public function shouldSuccessSerialize(): void
     {
-        $resource = $this->createMock(ResourceInterface::class);
+        $resource = new CustomerResource(1, 'John', new AddressResource('UK', 'London'));
+        $serialized = $this->serializer->serialize($resource, new ResourceSerializationContext([]));
 
-        $this->serializer->expects(self::once())
-            ->method('serialize')
-            ->with($resource, 'json', self::callback(function ($context) {
-                self::assertTrue(is_array($context), 'Context is not array.');
-                self::assertArrayHasKey('after_normalization', $context);
+        self::assertEquals([
+            'id'      => 1,
+            'name'    => 'John',
+            'address' => [
+                'country' => 'UK',
+                'city'    => 'London',
+            ],
+        ], \json_decode($serialized, true));
+    }
 
-                return true;
-            }))
-            ->willReturnCallback(function ($resource, $format, $context) {
-                return json_encode($context['after_normalization']([
-                    'relations' => ['some-foo-bar-relations'],
-                    'actions'   => ['some-foo-bar-actions'],
-                    'some'      => 'foo',
-                ]));
-            });
+    /**
+     * @test
+     */
+    public function shouldSuccessSerializeWithLinks(): void
+    {
+        $resource = new CustomerResource(1, 'John', new AddressResource('UK', 'London'));
+        $resource->addRelation(new Relation('self', new Href('/customers/1')));
+        $resource->addAction(new Action('edit', new Href('/customer/1'), new Method('POST')));
 
-        $data = $this->webApiSerializer->serialize($resource, new ResourceSerializationContext([]));
+        $serialized = $this->serializer->serialize($resource, new ResourceSerializationContext([]));
 
-        self::assertEquals('{"some":"foo"}', $data);
+        self::assertEquals([
+            'id'      => 1,
+            'name'    => 'John',
+            'address' => [
+                'country' => 'UK',
+                'city'    => 'London',
+            ],
+        ], \json_decode($serialized, true));
+    }
+
+    /**
+     * @test
+     */
+    public function shouldSuccessSerializeCollection(): void
+    {
+        $collection = new ResourceCollection(
+            new CustomerResource(1, 'John', new AddressResource('UK', 'London')),
+            new CustomerResource(2, 'Smith', new AddressResource('UA'))
+        );
+
+        $serialized = $this->serializer->serialize($collection, new ResourceSerializationContext([]));
+
+        self::assertEquals([
+            [
+                'id'      => 1,
+                'name'    => 'John',
+                'address' => [
+                    'country' => 'UK',
+                    'city'    => 'London',
+                ],
+            ],
+            [
+                'id'      => 2,
+                'name'    => 'Smith',
+                'address' => [
+                    'country' => 'UA',
+                    'city'    => null,
+                ],
+            ],
+        ], \json_decode($serialized, true));
+    }
+
+    /**
+     * @test
+     */
+    public function shouldSuccessSerializeCollectionWithLinks(): void
+    {
+        $collection = new ResourceCollection(
+            new CustomerResource(1, 'John', new AddressResource('UK', 'London')),
+            new CustomerResource(2, 'Smith', new AddressResource('UA'))
+        );
+
+        $collection->addRelation(new Relation('self', new Href('/customers')));
+
+        $serialized = $this->serializer->serialize($collection, new ResourceSerializationContext([]));
+
+        self::assertEquals([
+            [
+                'id'      => 1,
+                'name'    => 'John',
+                'address' => [
+                    'country' => 'UK',
+                    'city'    => 'London',
+                ],
+            ],
+            [
+                'id'      => 2,
+                'name'    => 'Smith',
+                'address' => [
+                    'country' => 'UA',
+                    'city'    => null,
+                ],
+            ],
+        ], \json_decode($serialized, true));
+    }
+
+    /**
+     * @test
+     */
+    public function shouldSuccessSerializePaginatedCollection(): void
+    {
+        $paginated = new PaginatedResourceCollection(
+            2,
+            2,
+            20,
+            new CustomerResource(1, 'John', new AddressResource('UK', 'London')),
+            new CustomerResource(2, 'Smith', new AddressResource('UA'))
+        );
+
+        $serialized = $this->serializer->serialize($paginated, new ResourceSerializationContext([]));
+
+        self::assertEquals([
+            'page'  => 2,
+            'limit' => 2,
+            'total' => 20,
+            'items' => [
+                [
+                    'id'      => 1,
+                    'name'    => 'John',
+                    'address' => [
+                        'country' => 'UK',
+                        'city'    => 'London',
+                    ],
+                ],
+                [
+                    'id'      => 2,
+                    'name'    => 'Smith',
+                    'address' => [
+                        'country' => 'UA',
+                        'city'    => null,
+                    ],
+                ],
+            ],
+        ], \json_decode($serialized, true));
     }
 
     /**
@@ -74,15 +201,12 @@ class WebApiSerializerTest extends TestCase
      */
     public function shouldSuccessDeserialize(): void
     {
-        $resource = $this->createMock(ResourceInterface::class);
+        $object = $this->serializer->deserialize(\json_encode([
+            'id'      => 1,
+            'name'    => 'John',
+            'address' => ['country' => 'UK'],
+        ]), CustomerResource::class, new ResourceSerializationContext([]));
 
-        $this->serializer->expects(self::once())
-            ->method('deserialize')
-            ->with('custom data', 'SomeMyClass', 'json')
-            ->willReturn($resource);
-
-        $result = $this->webApiSerializer->deserialize('custom data', 'SomeMyClass', new ResourceSerializationContext([]));
-
-        self::assertEquals($resource, $result);
+        self::assertEquals(new CustomerResource(1, 'John', new AddressResource('UK')), $object);
     }
 }

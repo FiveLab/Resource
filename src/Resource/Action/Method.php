@@ -29,7 +29,7 @@ class Method
     /**
      * @var string
      */
-    private $value;
+    private string $value;
 
     /**
      * Constructor.
@@ -114,7 +114,7 @@ class Method
     /**
      * Get the possible values of action method
      *
-     * @return array
+     * @return array<int, string>
      */
     public static function getPossibleValues(): array
     {

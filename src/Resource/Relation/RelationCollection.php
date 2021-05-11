@@ -17,13 +17,15 @@ namespace FiveLab\Component\Resource\Resource\Relation;
  * The collection for store relations.
  *
  * @author Vitaliy Zhuk <v.zhuk@fivelab.org>
+ *
+ * @implements \IteratorAggregate<RelationInterface>
  */
 class RelationCollection implements \IteratorAggregate, \Countable
 {
     /**
      * @var array|RelationInterface[]
      */
-    private $relations;
+    private array $relations;
 
     /**
      * Constructor.

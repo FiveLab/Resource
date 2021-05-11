@@ -23,12 +23,12 @@ class Href implements HrefInterface
     /**
      * @var string
      */
-    private $path;
+    private string $path;
 
     /**
      * @var bool
      */
-    private $templated;
+    private bool $templated;
 
     /**
      * Constructor.

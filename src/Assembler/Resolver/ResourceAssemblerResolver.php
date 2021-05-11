@@ -23,9 +23,9 @@ use FiveLab\Component\Resource\Assembler\ResourceAssemblerInterface;
 class ResourceAssemblerResolver implements ResourceAssemblerResolverInterface
 {
     /**
-     * @var array
+     * @var array<int, array>
      */
-    private $map = [];
+    private array $map = [];
 
     /**
      * Add the resource assembler to registry

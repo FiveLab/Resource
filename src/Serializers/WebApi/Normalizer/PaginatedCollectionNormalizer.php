@@ -11,7 +11,7 @@ declare(strict_types = 1);
  * file that was distributed with this source code
  */
 
-namespace FiveLab\Component\Resource\Serializers\Hateoas\Normalizer;
+namespace FiveLab\Component\Resource\Serializers\WebApi\Normalizer;
 
 use FiveLab\Component\Resource\Resource\PaginatedResourceCollection;
 use Symfony\Component\Serializer\Normalizer\NormalizerAwareInterface;
@@ -19,11 +19,11 @@ use Symfony\Component\Serializer\Normalizer\NormalizerAwareTrait;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
 /**
- * The normalizer for normalize paginated resource collection for HATEOAS format.
+ * Normalizer for normalize paginated collection.
  *
  * @author Vitaliy Zhuk <v.zhuk@fivelab.org>
  */
-class PaginatedCollectionObjectNormalizer implements NormalizerInterface, NormalizerAwareInterface
+class PaginatedCollectionNormalizer implements NormalizerInterface, NormalizerAwareInterface
 {
     use NormalizerAwareTrait;
 
@@ -42,25 +42,17 @@ class PaginatedCollectionObjectNormalizer implements NormalizerInterface, Normal
      */
     public function normalize($object, $format = null, array $context = []): array
     {
-        $normalizedItems = [];
+        $normalized = [
+            'page' => $object->getPage(),
+            'limit' => $object->getLimit(),
+            'total' => $object->getTotal(),
+            'items' => [],
+        ];
 
         foreach ($object as $item) {
-            $normalizedItems[] = $this->normalizer->normalize($item, $format, $context);
+            $normalized['items'][] = $this->normalizer->normalize($item, $format, $context);
         }
 
-        $normalizedRelations = $this->normalizer->normalize($object->getRelations(), $format, $context);
-
-        return [
-            'state'     => [
-                'page'   => $object->getPage(),
-                'limit'  => $object->getLimit(),
-                'pages'  => (int) (\ceil($object->getTotal() / $object->getLimit())),
-                'total'  => $object->getTotal(),
-                '_links' => $normalizedRelations,
-            ],
-            '_embedded' => [
-                'items' => $normalizedItems,
-            ],
-        ];
+        return $normalized;
     }
 }

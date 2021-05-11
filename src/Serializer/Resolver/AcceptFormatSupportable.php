@@ -21,26 +21,26 @@ namespace FiveLab\Component\Resource\Serializer\Resolver;
 class AcceptFormatSupportable implements ResourceSerializerSupportableInterface
 {
     /**
-     * @var array
+     * @var array<string>
      */
-    private $acceptedMediaTypes;
+    private array $acceptedMediaTypes;
 
     /**
-     * @var array
+     * @var array<string>
      */
-    private $supportClasses;
+    private array $supportClasses;
 
     /**
-     * @var array
+     * @var array<string>
      */
-    private $notSupportedClasses;
+    private array $notSupportedClasses;
 
     /**
      * Constructor.
      *
-     * @param array $acceptedMediaTypes
-     * @param array $supportClasses
-     * @param array $notSupportedClasses
+     * @param array<string> $acceptedMediaTypes
+     * @param array<string> $supportClasses
+     * @param array<string> $notSupportedClasses
      */
     public function __construct(array $acceptedMediaTypes, array $supportClasses = [], array $notSupportedClasses = [])
     {

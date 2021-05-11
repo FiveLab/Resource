@@ -21,12 +21,12 @@ use FiveLab\Component\Resource\Serializer\Context\ResourceSerializationContext;
  *
  * @author Vitaliy Zhuk <v.zhuk@fivelab.org>
  */
-class SerializationContextCollectorChain implements SerializationContextCollectorInterface
+class SerializationContextCollector implements SerializationContextCollectorInterface
 {
     /**
-     * @var \SplQueue|SerializationContextCollectorInterface[]
+     * @var \SplQueue<SerializationContextCollectorInterface>
      */
-    private $collectors;
+    private \SplQueue $collectors;
 
     /**
      * Constructor.

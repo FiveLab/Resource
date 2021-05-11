@@ -17,12 +17,7 @@ use FiveLab\Component\Resource\Resource\ResourceInterface;
 use FiveLab\Component\Resource\Serializer\Context\ResourceSerializationContext;
 use FiveLab\Component\Resource\Serializer\Exception\DeserializationNotSupportException;
 use FiveLab\Component\Resource\Serializer\ResourceSerializerInterface;
-use FiveLab\Component\Resource\Serializer\SerializerInterface;
-use FiveLab\Component\Resource\Serializers\Hateoas\Normalizer\PaginatedCollectionObjectNormalizer;
-use FiveLab\Component\Resource\Serializers\Hateoas\Normalizer\RelationCollectionObjectNormalizer;
-use FiveLab\Component\Resource\Serializers\Hateoas\Normalizer\RelationObjectNormalizer;
-use FiveLab\Component\Resource\Serializers\Hateoas\Normalizer\ResourceCollectionObjectNormalizer;
-use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
+use FiveLab\Component\Resource\Serializer\Serializer;
 
 /**
  * Hateoas serializer.
@@ -32,32 +27,32 @@ use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 class HateoasSerializer implements ResourceSerializerInterface
 {
     /**
-     * @var SerializerInterface
+     * @var Serializer
      */
-    private $serializer;
+    private Serializer $serializer;
 
     /**
      * @var string
      */
-    private $format;
+    private string $format;
 
     /**
-     * @var array|NormalizerInterface[]
+     * @var array<string, mixed>
      */
-    private $normalizers;
+    private array $serializationContext;
 
     /**
      * Constructor.
      *
-     * @param SerializerInterface $serializer
-     * @param array               $normalizers
-     * @param string              $format
+     * @param Serializer           $serializer
+     * @param string               $format
+     * @param array<string, mixed> $serializationContext
      */
-    public function __construct(SerializerInterface $serializer, array $normalizers, string $format)
+    public function __construct(Serializer $serializer, string $format, array $serializationContext = [])
     {
         $this->serializer = $serializer;
         $this->format = $format;
-        $this->normalizers = $normalizers;
+        $this->serializationContext = $serializationContext;
     }
 
     /**
@@ -65,14 +60,13 @@ class HateoasSerializer implements ResourceSerializerInterface
      */
     public function serialize(ResourceInterface $resource, ResourceSerializationContext $context): string
     {
-        $innerContext = [
+        $serializationContext = \array_merge($this->serializationContext, [
             'after_normalization' => function (array $data) {
                 return $this->fixRelations($data);
             },
-            'normalizers'         => $this->normalizers,
-        ];
+        ]);
 
-        return $this->serializer->serialize($resource, $this->format, $innerContext);
+        return $this->serializer->serialize($resource, $this->format, $serializationContext);
     }
 
     /**
@@ -90,7 +84,7 @@ class HateoasSerializer implements ResourceSerializerInterface
      *
      * @param array $data
      *
-     * @return array
+     * @return array<string, array>
      */
     protected function fixRelations(array $data): array
     {

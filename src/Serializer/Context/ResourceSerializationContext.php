@@ -21,9 +21,9 @@ namespace FiveLab\Component\Resource\Serializer\Context;
 class ResourceSerializationContext
 {
     /**
-     * @var array
+     * @var array<string, mixed>
      */
-    protected $payload;
+    protected array $payload;
 
     /**
      * Constructor.
@@ -36,7 +36,12 @@ class ResourceSerializationContext
     }
 
     /**
-     * {@inheritdoc}
+     * Get data from context
+     *
+     * @param string $key
+     * @param mixed  $default
+     *
+     * @return mixed
      */
     public function get(string $key, $default = null)
     {

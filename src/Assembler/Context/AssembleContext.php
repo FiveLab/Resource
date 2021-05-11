@@ -21,14 +21,14 @@ namespace FiveLab\Component\Resource\Assembler\Context;
 class AssembleContext
 {
     /**
-     * @var mixed
+     * @var array<string, mixed>
      */
-    private $payload;
+    private array $payload;
 
     /**
      * Constructor.
      *
-     * @param array $payload
+     * @param array<string, mixed> $payload
      */
     public function __construct(array $payload = [])
     {
@@ -36,7 +36,12 @@ class AssembleContext
     }
 
     /**
-     * {@inheritdoc}
+     * Get the element from context
+     *
+     * @param string $key
+     * @param mixed  $value
+     *
+     * @return mixed
      */
     public function get(string $key, $value = null)
     {

@@ -23,7 +23,7 @@ class TestedResourceAssembler extends AbstractResourceAssemblerSupport
     /**
      * {@inheritdoc}
      */
-    protected function convertToResource($entity, AssembleContext $context): ResourceInterface
+    protected function convertToResource(object $entity, AssembleContext $context): ResourceInterface
     {
         return new TestedResource();
     }

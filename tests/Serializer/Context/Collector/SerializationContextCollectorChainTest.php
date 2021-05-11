@@ -11,7 +11,7 @@
 
 namespace FiveLab\Component\Resource\Tests\Serializer\Context\Collector;
 
-use FiveLab\Component\Resource\Serializer\Context\Collector\SerializationContextCollectorChain;
+use FiveLab\Component\Resource\Serializer\Context\Collector\SerializationContextCollector;
 use FiveLab\Component\Resource\Serializer\Context\Collector\SerializationContextCollectorInterface;
 use FiveLab\Component\Resource\Serializer\Context\ResourceSerializationContext;
 use PHPUnit\Framework\TestCase;
@@ -29,7 +29,7 @@ class SerializationContextCollectorChainTest extends TestCase
         $collector1 = $this->createMock(SerializationContextCollectorInterface::class);
         $collector2 = $this->createMock(SerializationContextCollectorInterface::class);
 
-        $chainCollector = new SerializationContextCollectorChain();
+        $chainCollector = new SerializationContextCollector();
 
         $chainCollector->add($collector1);
         $chainCollector->add($collector2);

@@ -23,12 +23,12 @@ class ObjectAndResourceClassesInstanceofSupportable implements ResourceAssembler
     /**
      * @var string
      */
-    private $objectClass;
+    private string $objectClass;
 
     /**
      * @var string
      */
-    private $resourceClass;
+    private string $resourceClass;
 
     /**
      * Constructor.

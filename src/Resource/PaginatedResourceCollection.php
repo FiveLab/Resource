@@ -23,17 +23,17 @@ class PaginatedResourceCollection extends ResourceCollection
     /**
      * @var int
      */
-    private $limit;
+    private int $limit;
 
     /**
      * @var int
      */
-    private $page;
+    private int $page;
 
     /**
      * @var int
      */
-    private $total;
+    private int $total;
 
     /**
      * Constructor.

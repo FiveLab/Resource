@@ -1,22 +1,20 @@
 Resource System
 ===============
 
-[![SensioLabsInsight](https://insight.sensiolabs.com/projects/e421183b-e493-4b40-a63a-87ff64c8a0b0/mini.png)](https://insight.sensiolabs.com/projects/e421183b-e493-4b40-a63a-87ff64c8a0b0)
-[![Build Status](https://api.travis-ci.org/FiveLab/Resource.svg?branch=master)](https://travis-ci.org/FiveLab/Resource)
-[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/FiveLab/Resource/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/FiveLab/Resource/?branch=master)
-[![Code Coverage](https://scrutinizer-ci.com/g/FiveLab/Resource/badges/coverage.png?b=master)](https://scrutinizer-ci.com/g/FiveLab/Resource/?branch=master)
+[![Build Status](https://github.com/FiveLab/Resoure/workflows/Testing/badge.svg?branch=master)](https://github.com/FiveLab/Resource/actions)
 
 Add functionality for work with resources in you application and serialize this resources to any formats.
 
 Support formats:
 
-* WebAPI
-* HATEOAS
+* WebAPI - simple JSON/XML structure.
+* [HATEOAS](https://en.wikipedia.org/wiki/HATEOAS)
+* [VndError](https://github.com/blongden/vnd.error)
 
 Requirements
 ------------
 
-* PHP 7.1 or higher
+* PHP 7.4 or higher
 
 Installation
 ------------
@@ -26,7 +24,7 @@ Add Resource package in your composer.json:
 ````json
 {
     "require": {
-        "fivelab/resource": "~1.0"
+        "fivelab/resource": "~2.0"
     }
 }
 ````
@@ -37,12 +35,38 @@ Now tell composer to download the library by running the command:
 php composer.phar update fivelab/resource
 ```
 
-Documentation
-----------
+Problem
+-------
 
-The source of the documentation is stored in the `docs` folder in this package:
+More web applications use API (Application Programming Interface) with difference result structures. It's difficult 
+for developers and clients (who use this API) because each developer can return any data (JSON or XML).
+And in more cases, applications does not support media types and return JSON data with any `Content-Type` header.
 
-[Read the Documentation](docs/index.md)
+And in most cases, developers use real entities from database for map to JSON (as an example `symfony/serializer`). 
+This work funny, because one entity in backend application can representation to many resources for clients. As an example:
+we have `User` entity with more data. If user authorized, we must return all data, but if user not logged, we must
+return less data (`id` and `avatar` as an example). Yes, more people speak what we have a group system, 
+but what will happen if I say that we should have more than 100 groups? Yes, in large application it's real case.
+
+In this library we try to resolve all issue related with API.
+
+> Note: we don't speak - `API`, we must speak - `Resource`, 
+> because all operations (create, edit, delete, etc...) are performed on one resource (`Blog` as an example).
+
+Solution
+--------
+
+1. Full isolate between model in database and resource for representation.
+   Model from database convert to resource via `Assembler`.
+   `Blog -> Assembler -> BlogResource`. By this we can create any resources for one model in database. 
+   (For `Blog` as example: `BlogResoure`, `PremiumBlogResoure`, `HotBlogResource`, etc...). 
+   We don't use group system for separate, we have a separate assembler for each resource. 
+2. We full support [media type](https://en.wikipedia.org/wiki/Media_type) (`Content-Type/Accept`). 
+   If client accept `json`, we return `json`, if client accept `xml`, we return `xml` 
+   (but previously we must configure it ;) ). And - one resource, many formats ;)
+   
+> Note: in our library we use `symfony/serializer` with custom normalizers and additional functionality.
+> As result, all you custom normalizers/denormaizers will be normal work with our library. 
 
 License
 -------
@@ -78,4 +102,3 @@ Contributors:
 -------------
 
 Thanks to [everyone participating](https://github.com/FiveLab/Resource/graphs/contributors) in the development of this Resource library!
-

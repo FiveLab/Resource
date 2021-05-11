@@ -25,7 +25,7 @@ interface PresentationInterface
     /**
      * Get the resource of presentation
      *
-     * @return ResourceInterface
+     * @return ResourceInterface|null
      */
     public function getResource(): ?ResourceInterface;
 

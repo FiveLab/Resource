@@ -17,13 +17,15 @@ namespace FiveLab\Component\Resource\Resource\Error;
  * The collection for store child errors.
  *
  * @author Vitaliy Zhuk <v.zhuk@fivelab.org>
+ *
+ * @implements \IteratorAggregate<ErrorResourceInterface>
  */
 class ErrorCollection extends ErrorResource implements \IteratorAggregate, \Countable
 {
     /**
      * @var array|ErrorResourceInterface[]
      */
-    private $errors = [];
+    private array $errors = [];
 
     /**
      * Add errors to collection
@@ -32,7 +34,7 @@ class ErrorCollection extends ErrorResource implements \IteratorAggregate, \Coun
      */
     public function addErrors(ErrorResourceInterface ...$errors): void
     {
-        $this->errors = array_merge($this->errors, $errors);
+        $this->errors = \array_merge($this->errors, $errors);
     }
 
     /**

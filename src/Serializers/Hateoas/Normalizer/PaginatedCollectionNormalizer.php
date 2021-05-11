@@ -11,7 +11,7 @@ declare(strict_types = 1);
  * file that was distributed with this source code
  */
 
-namespace FiveLab\Component\Resource\Serializer\Normalizer;
+namespace FiveLab\Component\Resource\Serializers\Hateoas\Normalizer;
 
 use FiveLab\Component\Resource\Resource\PaginatedResourceCollection;
 use Symfony\Component\Serializer\Normalizer\NormalizerAwareInterface;
@@ -19,7 +19,7 @@ use Symfony\Component\Serializer\Normalizer\NormalizerAwareTrait;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
 /**
- * Normalizer for normalize paginated collection.
+ * The normalizer for normalize paginated resource collection for HATEOAS format.
  *
  * @author Vitaliy Zhuk <v.zhuk@fivelab.org>
  */
@@ -42,17 +42,25 @@ class PaginatedCollectionNormalizer implements NormalizerInterface, NormalizerAw
      */
     public function normalize($object, $format = null, array $context = []): array
     {
-        $normalized = [
-            'page' => $object->getPage(),
-            'limit' => $object->getLimit(),
-            'total' => $object->getTotal(),
-            'items' => [],
-        ];
+        $normalizedItems = [];
 
         foreach ($object as $item) {
-            $normalized['items'][] = $this->normalizer->normalize($item, $format, $context);
+            $normalizedItems[] = $this->normalizer->normalize($item, $format, $context);
         }
 
-        return $normalized;
+        $normalizedRelations = $this->normalizer->normalize($object->getRelations(), $format, $context);
+
+        return [
+            'state'     => [
+                'page'   => $object->getPage(),
+                'limit'  => $object->getLimit(),
+                'pages'  => (int) (\ceil($object->getTotal() / $object->getLimit())),
+                'total'  => $object->getTotal(),
+                '_links' => $normalizedRelations,
+            ],
+            '_embedded' => [
+                'items' => $normalizedItems,
+            ],
+        ];
     }
 }

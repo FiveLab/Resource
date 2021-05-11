@@ -11,13 +11,22 @@
 
 namespace FiveLab\Component\Resource\Tests\Serializers\VndError;
 
-use FiveLab\Component\Resource\Resource\ResourceInterface;
+use FiveLab\Component\Resource\Resource\Action\Action;
+use FiveLab\Component\Resource\Resource\Action\Method;
+use FiveLab\Component\Resource\Resource\Error\ErrorCollection;
+use FiveLab\Component\Resource\Resource\Error\ErrorResource;
+use FiveLab\Component\Resource\Resource\Href\Href;
+use FiveLab\Component\Resource\Resource\Relation\Relation;
 use FiveLab\Component\Resource\Serializer\Context\ResourceSerializationContext;
 use FiveLab\Component\Resource\Serializer\Exception\DeserializationNotSupportException;
-use FiveLab\Component\Resource\Serializer\SerializerInterface;
+use FiveLab\Component\Resource\Serializer\Serializer;
+use FiveLab\Component\Resource\Serializers\Hateoas\Normalizer\RelationCollectionNormalizer;
+use FiveLab\Component\Resource\Serializers\Hateoas\Normalizer\RelationNormalizer;
+use FiveLab\Component\Resource\Serializers\VndError\Normalizer\ErrorCollectionNormalizer;
+use FiveLab\Component\Resource\Serializers\VndError\Normalizer\ErrorResourceNormalizer;
 use FiveLab\Component\Resource\Serializers\VndError\VndErrorSerializer;
 use PHPUnit\Framework\TestCase;
-use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
+use Symfony\Component\Serializer\Encoder\JsonEncoder;
 
 /**
  * @author Vitaliy Zhuk <v.zhuk@fivelab.org>
@@ -25,28 +34,24 @@ use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 class VndErrorSerializerTest extends TestCase
 {
     /**
-     * @var SerializerInterface|\PHPUnit_Framework_MockObject_MockObject
-     */
-    private $serializer;
-
-    /**
-     * @var array|NormalizerInterface[]
-     */
-    private $normalizers;
-
-    /**
      * @var VndErrorSerializer
      */
-    private $vndErrorSerializer;
+    private VndErrorSerializer $serializer;
 
     /**
      * {@inheritdoc}
      */
     protected function setUp(): void
     {
-        $this->serializer = $this->createMock(SerializerInterface::class);
-        $this->normalizers = [$this->createMock(NormalizerInterface::class)];
-        $this->vndErrorSerializer = new VndErrorSerializer($this->serializer, $this->normalizers, 'json');
+        $normalizers = [
+            new ErrorCollectionNormalizer(),
+            new ErrorResourceNormalizer(),
+            new RelationCollectionNormalizer(),
+            new RelationNormalizer(),
+        ];
+
+        $serializer = new Serializer($normalizers, [new JsonEncoder()]);
+        $this->serializer = new VndErrorSerializer($serializer, 'json');
     }
 
     /**
@@ -54,28 +59,144 @@ class VndErrorSerializerTest extends TestCase
      */
     public function shouldSuccessSerialize(): void
     {
-        $resource = $this->createMock(ResourceInterface::class);
+        $resource = new ErrorResource('Invalid data', 'InvalidData', 'foo.bar', [], 31);
+        $serialized = $this->serializer->serialize($resource, new ResourceSerializationContext([]));
 
-        $this->serializer->expects(self::once())
-            ->method('serialize')
-            ->with($resource, 'json', [
-                'normalizers' => $this->normalizers,
-            ])
-            ->willReturn('some-serialized');
-
-        $serialized = $this->vndErrorSerializer->serialize($resource, new ResourceSerializationContext([]));
-
-        self::assertEquals('some-serialized', $serialized);
+        self::assertEquals([
+            'message' => 'Invalid data',
+            'path'    => 'foo.bar',
+            'logref'  => 31,
+        ], \json_decode($serialized, true));
     }
 
     /**
      * @test
      */
-    public function shouldFailDeserialize(): void
+    public function shouldSuccessSerializeWithLinks(): void
+    {
+        $resource = new ErrorResource('Invalid data', 'InvalidData', 'foo.bar', [], 31);
+        $resource->addRelation(new Relation('describe', new Href('/errors/31')));
+        $resource->addAction(new Action('update', new Href('/fix/31'), new Method('POST')));
+
+        $serialized = $this->serializer->serialize($resource, new ResourceSerializationContext([]));
+
+        self::assertEquals([
+            'message' => 'Invalid data',
+            'path'    => 'foo.bar',
+            'logref'  => 31,
+            '_links'  => [
+                'describe' => ['href' => '/errors/31'],
+                'update'   => ['href' => '/fix/31'],
+            ],
+        ], \json_decode($serialized, true));
+    }
+
+    /**
+     * @test
+     */
+    public function shouldSuccessSerializeCollection(): void
+    {
+        $resource = new ErrorCollection(
+            'Wrong data',
+            'InvalidData'
+        );
+
+        $resource->addErrors(
+            new ErrorResource('Invalid email', null, 'email'),
+            new ErrorResource('Invalid phone', null, 'phone')
+        );
+
+        $serialized = $this->serializer->serialize($resource, new ResourceSerializationContext([]));
+
+        self::assertEquals([
+            'message'   => 'Wrong data',
+            '_embedded' => [
+                'errors' => [
+                    [
+                        'message' => 'Invalid email',
+                        'path'    => 'email',
+                    ],
+                    [
+                        'message' => 'Invalid phone',
+                        'path'    => 'phone',
+                    ],
+                ],
+            ],
+        ], \json_decode($serialized, true));
+    }
+
+    /**
+     * @test
+     */
+    public function shouldSuccessSerializeCollectionWithLinks(): void
+    {
+        $resource = new ErrorCollection(
+            'Wrong data',
+            'InvalidData'
+        );
+
+        $resource->addErrors(
+            new ErrorResource('Invalid email', null, 'email'),
+            new ErrorResource('Invalid phone', null, 'phone')
+        );
+
+        $resource->addRelation(new Relation('describe', new Href('/errors/foo')));
+        $resource->addAction(new Action('fix', new Href('/errors/foo/fix'), Method::post()));
+
+        $serialized = $this->serializer->serialize($resource, new ResourceSerializationContext([]));
+
+        self::assertEquals([
+            'describe' => ['href' => '/errors/foo'],
+            'fix'      => ['href' => '/errors/foo/fix'],
+        ], \json_decode($serialized, true)['_links']);
+    }
+
+    /**
+     * @test
+     */
+    public function shouldSuccessSerializeCollectionWithoutNested(): void
+    {
+        $resource = new ErrorCollection('');
+
+        $resource->addErrors(
+            new ErrorResource('Invalid email', null, 'email'),
+            new ErrorResource('Invalid phone', null, 'phone')
+        );
+
+        $resource->addRelation(new Relation('describe', new Href('/errors/foo')));
+        $resource->addAction(new Action('fix', new Href('/errors/foo/fix'), Method::post()));
+
+        $serialized = $this->serializer->serialize($resource, new ResourceSerializationContext([]));
+
+        self::assertEquals([
+            'total'     => 2,
+            '_links'    => [
+                'describe' => ['href' => '/errors/foo'],
+                'fix'      => ['href' => '/errors/foo/fix'],
+            ],
+            '_embedded' => [
+                'errors' => [
+                    [
+                        'message' => 'Invalid email',
+                        'path'    => 'email',
+                    ],
+                    [
+                        'message' => 'Invalid phone',
+                        'path'    => 'phone',
+                    ],
+                ],
+            ],
+        ], \json_decode($serialized, true));
+    }
+
+    /**
+     * @test
+     */
+    public function shouldThrowErrorOnDeserialization(): void
     {
         $this->expectException(DeserializationNotSupportException::class);
         $this->expectExceptionMessage('The Vnd.Error not support deserialization.');
 
-        $this->vndErrorSerializer->deserialize('some', ResourceInterface::class, new ResourceSerializationContext([]));
+        $this->serializer->deserialize('{}', ErrorResource::class, new ResourceSerializationContext([]));
     }
 }
