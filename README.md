@@ -1,7 +1,7 @@
 Resource System
 ===============
 
-[![Build Status](https://github.com/FiveLab/Resoure/workflows/Testing/badge.svg?branch=master)](https://github.com/FiveLab/Resource/actions)
+[![Build Status](https://github.com/FiveLab/Resource/workflows/Testing/badge.svg?branch=master)](https://github.com/FiveLab/Resource/actions)
 
 Add functionality for work with resources in you application and serialize this resources to any formats.
 
