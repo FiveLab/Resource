@@ -17,11 +17,7 @@ use FiveLab\Component\Resource\Resource\ResourceInterface;
 use FiveLab\Component\Resource\Serializer\Context\ResourceSerializationContext;
 use FiveLab\Component\Resource\Serializer\Exception\DeserializationNotSupportException;
 use FiveLab\Component\Resource\Serializer\ResourceSerializerInterface;
-use FiveLab\Component\Resource\Serializer\SerializerInterface;
-use FiveLab\Component\Resource\Serializers\Hateoas\Normalizer\RelationCollectionObjectNormalizer;
-use FiveLab\Component\Resource\Serializers\Hateoas\Normalizer\RelationObjectNormalizer;
-use FiveLab\Component\Resource\Serializers\VndError\Normalizer\ErrorCollectionObjectNormalizer;
-use FiveLab\Component\Resource\Serializers\VndError\Normalizer\ErrorResourceObjectNormalizer;
+use Symfony\Component\Serializer\SerializerInterface;
 
 /**
  * The serializer for serialize errors to Vnd.Error format.
@@ -33,30 +29,30 @@ class VndErrorSerializer implements ResourceSerializerInterface
     /**
      * @var SerializerInterface
      */
-    private $serializer;
+    private SerializerInterface $serializer;
 
     /**
      * @var string
      */
-    private $format;
+    private string $format;
 
     /**
-     * @var array
+     * @var array<string, mixed>
      */
-    private $normalizers;
+    private array $serializationContext;
 
     /**
      * Constructor.
      *
-     * @param SerializerInterface $serializer
-     * @param array               $normalizers
-     * @param string              $format
+     * @param SerializerInterface  $serializer
+     * @param string               $format
+     * @param array<string, mixed> $serializationContext
      */
-    public function __construct(SerializerInterface $serializer, array $normalizers, string $format)
+    public function __construct(SerializerInterface $serializer, string $format, array $serializationContext = [])
     {
         $this->serializer = $serializer;
         $this->format = $format;
-        $this->normalizers = $normalizers;
+        $this->serializationContext = $serializationContext;
     }
 
     /**
@@ -64,11 +60,7 @@ class VndErrorSerializer implements ResourceSerializerInterface
      */
     public function serialize(ResourceInterface $resource, ResourceSerializationContext $context): string
     {
-        $innerContext = [
-            'normalizers' => $this->normalizers,
-        ];
-
-        return $this->serializer->serialize($resource, $this->format, $innerContext);
+        return $this->serializer->serialize($resource, $this->format, $this->serializationContext);
     }
 
     /**

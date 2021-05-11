@@ -22,7 +22,7 @@ use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
  *
  * @author Vitaliy Zhuk <v.zhuk@fivelab.org>
  */
-class RelationObjectNormalizer implements NormalizerInterface
+class RelationNormalizer implements NormalizerInterface
 {
     /**
      * {@inheritdoc}
@@ -31,15 +31,6 @@ class RelationObjectNormalizer implements NormalizerInterface
      */
     public function normalize($object, $format = null, array $context = []): array
     {
-        if (!$object instanceof RelationInterface && !$object instanceof ActionInterface) {
-            throw new \InvalidArgumentException(\sprintf(
-                'The normalizer support only "%s" or "%s" but "%s" given.',
-                RelationInterface::class,
-                ActionInterface::class,
-                \is_object($object) ? \get_class($object) : \gettype($object)
-            ));
-        }
-
         $data = [
             'href' => $object->getHref()->getPath(),
         ];
@@ -48,7 +39,7 @@ class RelationObjectNormalizer implements NormalizerInterface
             $data['templated'] = true;
         }
 
-        if (count($object->getAttributes())) {
+        if (\count($object->getAttributes())) {
             $data['attributes'] = $object->getAttributes();
         }
 

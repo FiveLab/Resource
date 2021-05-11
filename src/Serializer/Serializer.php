@@ -19,78 +19,49 @@ use FiveLab\Component\Resource\Serializer\Events\AfterNormalizationEvent;
 use FiveLab\Component\Resource\Serializer\Events\BeforeDenormalizationEvent;
 use FiveLab\Component\Resource\Serializer\Events\BeforeNormalizationEvent;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
-use Symfony\Component\Serializer\Normalizer\DenormalizerAwareInterface;
-use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
-use Symfony\Component\Serializer\Normalizer\NormalizerAwareInterface;
-use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 use Symfony\Component\Serializer\Serializer as SymfonySerializer;
 
 /**
- * Override the default serializer for add ability for adding dynamically
- * normalizers before serialization and deserialization processes.
+ * Override the default serializer for add ability for adding eventable and hook system.
+ * Note: we use setter for injection for not affect original constructor.
  *
  * @author Vitaliy Zhuk <v.zhuk@fivelab.org>
  */
-class Serializer extends SymfonySerializer implements SerializerInterface
+class Serializer extends SymfonySerializer
 {
     /**
-     * @var EventDispatcherInterface
+     * @var EventDispatcherInterface|null
      */
-    private $eventDispatcher;
+    private ?EventDispatcherInterface $eventDispatcher = null;
 
     /**
-     * Constructor.
+     * Set event dispatcher
      *
-     * @param array                    $normalizers
-     * @param array                    $encoders
      * @param EventDispatcherInterface $eventDispatcher
      */
-    public function __construct(array $normalizers, array $encoders, EventDispatcherInterface $eventDispatcher)
+    public function setEventDispatcher(EventDispatcherInterface $eventDispatcher): void
     {
-        parent::__construct($normalizers, $encoders);
-
         $this->eventDispatcher = $eventDispatcher;
     }
 
     /**
      * {@inheritdoc}
      *
-     * @throws \Exception
+     * @throws \Throwable
      */
     public function normalize($data, $format = null, array $context = [])
     {
-        if ($data instanceof ResourceInterface) {
+        if ($data instanceof ResourceInterface && $this->eventDispatcher) {
             $event = new BeforeNormalizationEvent($data, (string) $format, $context);
-            $this->eventDispatcher->dispatch(SerializationEvents::BEFORE_NORMALIZATION, $event);
+            $this->eventDispatcher->dispatch($event, SerializationEvents::BEFORE_NORMALIZATION);
         }
 
-        $countNormalizers = 0;
+        $normalized = parent::normalize($data, $format, $context);
+        $normalized = $this->executeNormalizationCallable($normalized, $context['after_normalization'] ?? null);
 
-        if (\array_key_exists('normalizers', $context)) {
-            /** @var NormalizerInterface[] $normalizers */
-            $normalizers = \array_reverse($context['normalizers']);
-
-            foreach ($normalizers as $normalizer) {
-                if ($normalizer instanceof NormalizerInterface) {
-                    $countNormalizers++;
-
-                    $this->prepareNormalizer($normalizer);
-                    \array_unshift($this->normalizers, $normalizer);
-                }
-            }
-        }
-
-        try {
-            $normalized = parent::normalize($data, $format, $context);
-        } finally {
-            for ($i = 0; $i < $countNormalizers; $i++) {
-                \array_shift($this->normalizers);
-            }
-        }
-
-        if ($data instanceof ResourceInterface) {
+        if ($data instanceof ResourceInterface && $this->eventDispatcher) {
             $event = new AfterNormalizationEvent($data, $normalized, (string) $format, $context);
-            $this->eventDispatcher->dispatch(SerializationEvents::AFTER_NORMALIZATION, $event);
+            $this->eventDispatcher->dispatch($event, SerializationEvents::AFTER_NORMALIZATION);
         }
 
         return $normalized;
@@ -101,64 +72,36 @@ class Serializer extends SymfonySerializer implements SerializerInterface
      */
     public function denormalize($data, $type, $format = null, array $context = [])
     {
-        if (\is_a($type, ResourceInterface::class, true)) {
-            $event = new BeforeDenormalizationEvent($data, $type, $format, $context);
-            $this->eventDispatcher->dispatch(SerializationEvents::BEFORE_DENORMALIZATION, $event);
+        if (\is_a($type, ResourceInterface::class, true) && $this->eventDispatcher) {
+            $event = new BeforeDenormalizationEvent($data, $type, (string) $format, $context);
+            $this->eventDispatcher->dispatch($event, SerializationEvents::BEFORE_DENORMALIZATION);
         }
 
-        $countDenormalizers = 0;
+        $denormalized = $this->executeNormalizationCallable($data, $context['before_denormalization'] ?? null);
+        $denormalized = parent::denormalize($denormalized, $type, $format, $context);
 
-        if (\array_key_exists('normalizers', $context)) {
-            /** @var NormalizerInterface[] $normalizers */
-            $normalizers = \array_reverse($context['normalizers']);
-
-            foreach ($normalizers as $normalizer) {
-                if ($normalizer instanceof DenormalizerInterface) {
-                    $countDenormalizers++;
-
-                    $this->prepareDenormalizer($normalizer);
-                    \array_unshift($this->normalizers, $normalizer);
-                }
-            }
-        }
-
-        try {
-            $denormalized = parent::denormalize($data, $type, $format, $context);
-        } finally {
-            for ($i = 0; $i < $countDenormalizers; $i++) {
-                \array_shift($this->normalizers);
-            }
-        }
-
-        if (\is_a($type, ResourceInterface::class, true)) {
+        if (\is_a($type, ResourceInterface::class, true) && $this->eventDispatcher) {
             $event = new AfterDenormalizationEvent($data, $denormalized, (string) $format, $context);
-            $this->eventDispatcher->dispatch(SerializationEvents::AFTER_DENORMALIZATION, $event);
+            $this->eventDispatcher->dispatch($event, SerializationEvents::AFTER_DENORMALIZATION);
         }
 
         return $denormalized;
     }
 
     /**
-     * Prepare normalizer
+     * Execute normalization callable
      *
-     * @param NormalizerInterface $normalizer
+     * @param mixed         $data
+     * @param \Closure|null $callable
+     *
+     * @return mixed
      */
-    private function prepareNormalizer(NormalizerInterface $normalizer): void
+    private function executeNormalizationCallable($data, \Closure $callable = null)
     {
-        if ($normalizer instanceof NormalizerAwareInterface) {
-            $normalizer->setNormalizer($this);
+        if ($callable) {
+            return $callable($data);
         }
-    }
 
-    /**
-     * Prepare denormalizer
-     *
-     * @param DenormalizerInterface $denormalizer
-     */
-    private function prepareDenormalizer(DenormalizerInterface $denormalizer): void
-    {
-        if ($denormalizer instanceof DenormalizerAwareInterface) {
-            $denormalizer->setDenormalizer($this);
-        }
+        return $data;
     }
 }

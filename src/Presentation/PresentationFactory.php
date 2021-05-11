@@ -25,8 +25,8 @@ class PresentationFactory
     /**
      * Create the presentation
      *
-     * @param int               $statusCode
-     * @param ResourceInterface $resource
+     * @param int                    $statusCode
+     * @param ResourceInterface|null $resource
      *
      * @return PresentationInterface
      */
@@ -62,7 +62,7 @@ class PresentationFactory
     /**
      * Create accepted presentation
      *
-     * @param ResourceInterface $resource
+     * @param ResourceInterface|null $resource
      *
      * @return PresentationInterface
      */
@@ -106,7 +106,7 @@ class PresentationFactory
     /**
      * Create the bad request presentation
      *
-     * @param ResourceInterface $resource
+     * @param ResourceInterface|null $resource
      *
      * @return PresentationInterface
      */
@@ -118,7 +118,7 @@ class PresentationFactory
     /**
      * Create unauthorized presentation
      *
-     * @param ResourceInterface $resource
+     * @param ResourceInterface|null $resource
      *
      * @return PresentationInterface
      */
@@ -130,7 +130,7 @@ class PresentationFactory
     /**
      * Create forbidden presentation
      *
-     * @param ResourceInterface $resource
+     * @param ResourceInterface|null $resource
      *
      * @return PresentationInterface
      */
@@ -154,7 +154,7 @@ class PresentationFactory
     /**
      * Create conflict presentation
      *
-     * @param ResourceInterface $resource
+     * @param ResourceInterface|null $resource
      *
      * @return PresentationInterface
      */
@@ -166,7 +166,7 @@ class PresentationFactory
     /**
      * Create gone presentation
      *
-     * @param ResourceInterface $resource
+     * @param ResourceInterface|null $resource
      *
      * @return PresentationInterface
      */
@@ -178,7 +178,7 @@ class PresentationFactory
     /**
      * Create request entity to large presentation
      *
-     * @param ResourceInterface $resource
+     * @param ResourceInterface|null $resource
      *
      * @return PresentationInterface
      */
@@ -190,7 +190,7 @@ class PresentationFactory
     /**
      * Create unsupported media type presentation
      *
-     * @param ResourceInterface $resource
+     * @param ResourceInterface|null $resource
      *
      * @return PresentationInterface
      */
@@ -202,7 +202,7 @@ class PresentationFactory
     /**
      * Create internal server error presentation
      *
-     * @param ResourceInterface $resource
+     * @param ResourceInterface|null $resource
      *
      * @return PresentationInterface
      */

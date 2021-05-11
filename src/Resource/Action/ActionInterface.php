@@ -60,14 +60,14 @@ interface ActionInterface
     /**
      * Get the attributes of action
      *
-     * @return array
+     * @return array<string, mixed>
      */
     public function getAttributes(): array;
 
     /**
      * Set the attributes of action
      *
-     * @param array $attributes
+     * @param array<string, mixed> $attributes
      */
     public function setAttributes(array $attributes): void;
 }

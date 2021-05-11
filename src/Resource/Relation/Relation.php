@@ -25,24 +25,24 @@ class Relation implements RelationInterface
     /**
      * @var string
      */
-    private $name;
+    private string $name;
 
     /**
      * @var HrefInterface
      */
-    private $href;
+    private HrefInterface $href;
 
     /**
-     * @var array
+     * @var array<string, mixed>
      */
-    private $attributes;
+    private array $attributes;
 
     /**
      * Constructor.
      *
-     * @param string        $name
-     * @param HrefInterface $href
-     * @param array         $attributes
+     * @param string               $name
+     * @param HrefInterface        $href
+     * @param array<string, mixed> $attributes
      */
     public function __construct(string $name, HrefInterface $href, array $attributes = [])
     {

@@ -46,14 +46,14 @@ interface RelationInterface
     /**
      * Get the custom attributes of relation
      *
-     * @return array
+     * @return array<string, mixed>
      */
     public function getAttributes(): array;
 
     /**
      * Set new custom attributes of relation
      *
-     * @param array $attributes
+     * @param array<string, mixed> $attributes
      */
     public function setAttributes(array $attributes): void;
 }

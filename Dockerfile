@@ -1,4 +1,4 @@
-FROM php:7.1
+FROM php:7.4-cli
 
 MAINTAINER Vitaliy Zhuk <v.zhuk@fivelab.org>
 
@@ -14,7 +14,7 @@ RUN \
 		git
 
 RUN \
-    yes | pecl install xdebug && \
+    yes | pecl install xdebug-2.9.8 && \
     docker-php-ext-enable xdebug
 
 # Configure XDebug

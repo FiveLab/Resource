@@ -23,9 +23,9 @@ use FiveLab\Component\Resource\Serializer\ResourceSerializerInterface;
 class ResourceSerializerResolver implements ResourceSerializerResolverInterface
 {
     /**
-     * @var array
+     * @var array<int, array>
      */
-    private $map = [];
+    private array $map = [];
 
     /**
      * Add the resource normalizer to registry

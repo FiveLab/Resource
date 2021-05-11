@@ -23,7 +23,7 @@ use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
  *
  * @author Vitaliy Zhuk <v.zhuk@fivelab.org>
  */
-class ResourceCollectionObjectNormalizer implements NormalizerInterface, NormalizerAwareInterface
+class ResourceCollectionNormalizer implements NormalizerInterface, NormalizerAwareInterface
 {
     use NormalizerAwareTrait;
 
@@ -36,22 +36,16 @@ class ResourceCollectionObjectNormalizer implements NormalizerInterface, Normali
      */
     public function normalize($object, $format = null, array $context = [])
     {
-        if (!$object instanceof ResourceCollection) {
-            throw new \InvalidArgumentException(\sprintf(
-                'The normalizer support only "%s" but "%s" given.',
-                ResourceCollection::class,
-                \is_object($object) ? \get_class($object) : \gettype($object)
-            ));
-        }
-
         $data = [];
         $links = [];
 
         if (\count($object->getRelations())) {
+            // @phpstan-ignore-next-line
             $links = \array_merge($links, $this->normalizer->normalize($object->getRelations(), $format, $context));
         }
 
         if (\count($object->getActions())) {
+            // @phpstan-ignore-next-line
             $links = \array_merge($links, $this->normalizer->normalize($object->getActions(), $format, $context));
         }
 

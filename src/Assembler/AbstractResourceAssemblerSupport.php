@@ -27,7 +27,7 @@ abstract class AbstractResourceAssemblerSupport implements ResourceAssemblerInte
     /**
      * {@inheritdoc}
      */
-    public function toResource($entity, AssembleContext $context = null): ResourceInterface
+    public function toResource(object $entity, AssembleContext $context = null): ResourceInterface
     {
         if (!$context) {
             $context = new AssembleContext([]);
@@ -58,5 +58,5 @@ abstract class AbstractResourceAssemblerSupport implements ResourceAssemblerInte
      *
      * @return ResourceInterface
      */
-    abstract protected function convertToResource($entity, AssembleContext $context): ResourceInterface;
+    abstract protected function convertToResource(object $entity, AssembleContext $context): ResourceInterface;
 }

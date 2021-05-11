@@ -14,7 +14,7 @@ declare(strict_types = 1);
 namespace FiveLab\Component\Resource\Serializer\Events;
 
 use FiveLab\Component\Resource\Resource\ResourceInterface;
-use Symfony\Component\EventDispatcher\Event;
+use Symfony\Contracts\EventDispatcher\Event;
 
 /**
  * After success normalization event.
@@ -26,22 +26,22 @@ class AfterNormalizationEvent extends Event
     /**
      * @var ResourceInterface
      */
-    private $resource;
+    private ResourceInterface $resource;
 
     /**
      * @var array
      */
-    private $data;
+    private array $data;
 
     /**
      * @var string
      */
-    private $format;
+    private string $format;
 
     /**
      * @var array
      */
-    private $context;
+    private array $context;
 
     /**
      * Constructor.

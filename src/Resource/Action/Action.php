@@ -25,30 +25,30 @@ class Action implements ActionInterface
     /**
      * @var string
      */
-    private $name;
+    private string $name;
 
     /**
      * @var HrefInterface
      */
-    private $href;
+    private HrefInterface $href;
 
     /**
      * @var Method
      */
-    private $method;
+    private Method $method;
 
     /**
-     * @var array
+     * @var array<string, mixed>
      */
-    private $attributes;
+    private array $attributes;
 
     /**
      * Constructor.
      *
-     * @param string        $name
-     * @param HrefInterface $href
-     * @param Method        $method
-     * @param array         $attributes
+     * @param string               $name
+     * @param HrefInterface        $href
+     * @param Method               $method
+     * @param array<string, mixed> $attributes
      */
     public function __construct(string $name, HrefInterface $href, Method $method, array $attributes = [])
     {

@@ -13,7 +13,7 @@ declare(strict_types = 1);
 
 namespace FiveLab\Component\Resource\Serializer\Events;
 
-use Symfony\Component\EventDispatcher\Event;
+use Symfony\Contracts\EventDispatcher\Event;
 
 /**
  * Before denormalization event.
@@ -30,17 +30,17 @@ class BeforeDenormalizationEvent extends Event
     /**
      * @var string
      */
-    private $type;
+    private string $type;
 
     /**
      * @var string
      */
-    private $format;
+    private string $format;
 
     /**
      * @var array
      */
-    private $context;
+    private array $context;
 
     /**
      * Constructor.
