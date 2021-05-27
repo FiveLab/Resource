@@ -57,7 +57,10 @@ class Serializer extends SymfonySerializer
         }
 
         $normalized = parent::normalize($data, $format, $context);
-        $normalized = $this->executeNormalizationCallable($normalized, $context['after_normalization'] ?? null);
+
+        if ($afterNormalization = $context['after_normalization'] ?? null) {
+            $normalized = $afterNormalization($normalized, $data);
+        }
 
         if ($data instanceof ResourceInterface && $this->eventDispatcher) {
             $event = new AfterNormalizationEvent($data, $normalized, (string) $format, $context);
@@ -77,8 +80,11 @@ class Serializer extends SymfonySerializer
             $this->eventDispatcher->dispatch($event, SerializationEvents::BEFORE_DENORMALIZATION);
         }
 
-        $denormalized = $this->executeNormalizationCallable($data, $context['before_denormalization'] ?? null);
-        $denormalized = parent::denormalize($denormalized, $type, $format, $context);
+        if ($beforeDenormalization = $context['before_denormalization'] ?? null) {
+            $data = $beforeDenormalization($data);
+        }
+
+        $denormalized = parent::denormalize($data, $type, $format, $context);
 
         if (\is_a($type, ResourceInterface::class, true) && $this->eventDispatcher) {
             $event = new AfterDenormalizationEvent($data, $denormalized, (string) $format, $context);
@@ -86,22 +92,5 @@ class Serializer extends SymfonySerializer
         }
 
         return $denormalized;
-    }
-
-    /**
-     * Execute normalization callable
-     *
-     * @param mixed         $data
-     * @param \Closure|null $callable
-     *
-     * @return mixed
-     */
-    private function executeNormalizationCallable($data, \Closure $callable = null)
-    {
-        if ($callable) {
-            return $callable($data);
-        }
-
-        return $data;
     }
 }

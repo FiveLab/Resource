@@ -13,6 +13,8 @@ declare(strict_types = 1);
 
 namespace FiveLab\Component\Resource\Serializers\Hateoas;
 
+use FiveLab\Component\Resource\Resource\ActionedResourceInterface;
+use FiveLab\Component\Resource\Resource\RelatedResourceInterface;
 use FiveLab\Component\Resource\Resource\ResourceInterface;
 use FiveLab\Component\Resource\Serializer\Context\ResourceSerializationContext;
 use FiveLab\Component\Resource\Serializer\Exception\DeserializationNotSupportException;
@@ -61,8 +63,12 @@ class HateoasSerializer implements ResourceSerializerInterface
     public function serialize(ResourceInterface $resource, ResourceSerializationContext $context): string
     {
         $serializationContext = \array_merge($this->serializationContext, [
-            'after_normalization' => function (array $data) {
-                return $this->fixRelations($data);
+            'after_normalization' => function ($data, $resource) {
+                if ($resource instanceof RelatedResourceInterface || $resource instanceof ActionedResourceInterface) {
+                    return $this->fixRelations($data);
+                }
+
+                return $data;
             },
         ]);
 
