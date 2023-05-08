@@ -49,7 +49,7 @@ class Serializer extends SymfonySerializer
      *
      * @throws \Throwable
      */
-    public function normalize($data, $format = null, array $context = [])
+    public function normalize(mixed $data, string $format = null, array $context = []): array|string|int|float|bool|\ArrayObject|null
     {
         if ($data instanceof ResourceInterface && $this->eventDispatcher) {
             $event = new BeforeNormalizationEvent($data, (string) $format, $context);
@@ -73,7 +73,7 @@ class Serializer extends SymfonySerializer
     /**
      * {@inheritdoc}
      */
-    public function denormalize($data, $type, $format = null, array $context = [])
+    public function denormalize(mixed $data, string $type, string $format = null, array $context = []): mixed
     {
         if (\is_a($type, ResourceInterface::class, true) && $this->eventDispatcher) {
             $event = new BeforeDenormalizationEvent($data, $type, (string) $format, $context);
