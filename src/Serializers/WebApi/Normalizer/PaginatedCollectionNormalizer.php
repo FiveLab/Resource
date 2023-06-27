@@ -55,4 +55,14 @@ class PaginatedCollectionNormalizer implements NormalizerInterface, NormalizerAw
 
         return $normalized;
     }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getSupportedTypes(?string $format): array
+    {
+        return [
+            PaginatedResourceCollection::class => true,
+        ];
+    }
 }

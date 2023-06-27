@@ -72,4 +72,14 @@ class ErrorResourceNormalizer implements NormalizerInterface, NormalizerAwareInt
 
         return $data;
     }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getSupportedTypes(?string $format): array
+    {
+        return [
+            ErrorResourceInterface::class => true,
+        ];
+    }
 }

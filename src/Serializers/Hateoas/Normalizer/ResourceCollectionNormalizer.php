@@ -55,7 +55,7 @@ class ResourceCollectionNormalizer implements NormalizerInterface, NormalizerAwa
 
         if (\count($links)) {
             return [
-                '_links' => $links,
+                '_links'    => $links,
                 '_embedded' => [
                     'items' => $data,
                 ],
@@ -71,5 +71,15 @@ class ResourceCollectionNormalizer implements NormalizerInterface, NormalizerAwa
     public function supportsNormalization($data, $format = null): bool
     {
         return \is_object($data) && $data instanceof ResourceCollection;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getSupportedTypes(?string $format): array
+    {
+        return [
+            ResourceCollection::class => true,
+        ];
     }
 }

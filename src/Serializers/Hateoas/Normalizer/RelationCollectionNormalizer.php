@@ -53,4 +53,15 @@ class RelationCollectionNormalizer implements NormalizerInterface, NormalizerAwa
     {
         return \is_object($data) && ($data instanceof RelationCollection || $data instanceof ActionCollection);
     }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getSupportedTypes(?string $format): array
+    {
+        return [
+            RelationCollection::class => true,
+            ActionCollection::class   => true,
+        ];
+    }
 }

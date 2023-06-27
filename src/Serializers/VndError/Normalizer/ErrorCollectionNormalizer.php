@@ -99,4 +99,14 @@ class ErrorCollectionNormalizer implements NormalizerInterface, NormalizerAwareI
 
         return $data;
     }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getSupportedTypes(?string $format): array
+    {
+        return [
+            ErrorCollection::class => true,
+        ];
+    }
 }

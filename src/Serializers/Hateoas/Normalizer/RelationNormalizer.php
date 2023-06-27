@@ -53,4 +53,15 @@ class RelationNormalizer implements NormalizerInterface
     {
         return \is_object($data) && ($data instanceof RelationInterface || $data instanceof ActionInterface);
     }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getSupportedTypes(?string $format): array
+    {
+        return [
+            RelationInterface::class => true,
+            ActionInterface::class   => true,
+        ];
+    }
 }
